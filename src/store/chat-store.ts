@@ -1,20 +1,28 @@
-import {z} from "zod"
+import {create} from "zustand/react";
+import {persist} from "zustand/middleware/persist";
+import {ChatSession} from "@/schema/chat-session";
+import {SetStateAction} from "react";
+import {applySetStateAction} from "@/utils";
 
+interface ChatStore {
+    currentSessionIndex: number;
+    sessions: ChatSession[];
+    getCurrentSession: () => ChatSession;
+    updateCurrentSession: (session: SetStateAction<ChatSession>) => void;
+}
 
-export const ChatMessageContentSchema = z.string().or(z.any())
-export const ChatMessageSchema = z.object({
-    contents: z.array(ChatMessageContentSchema),
-    role: z.enum(["user", "assistant", "system"])
-})
-export const ChatSessionSchema = z.object({
-    messages:z.array(ChatMessageContentSchema),
-    modelConfig:z.object({
-        name:z.string()
-    })
-})
-export const ChatStoreSchema = z.object({
-    currentSessionIndex:z.number(),
-    sessions:z.array(ChatSessionSchema)
-})
-export type ChatMessageContent = z.infer<typeof ChatMessageContentSchema>
-export type ChatMessage = z.infer<typeof ChatMessageSchema>
+export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) => ({
+    currentSessionIndex: 0 as number,
+    sessions: [] as ChatSession[],
+    getCurrentSession: () => {
+        const {currentSessionIndex, sessions} = get()
+        return sessions[currentSessionIndex]
+    },
+    updateCurrentSession: (session) => {
+        let newSession = applySetStateAction<ChatSession>(get().getCurrentSession(), session)
+        const sessions = get().sessions
+        sessions[get().currentSessionIndex] = newSession
+        set({...get(), sessions})
+    }
+
+}), {name: "chat-store"}))

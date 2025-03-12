@@ -8,7 +8,7 @@ export default function ChatPageLayout({
 }>) {
     return (
 
-        <div className={"relative w-full h-[100vh] bg-red-50"}>
+        <div className={"relative w-full h-[100vh] bg-pink-50/40"}>
             <PageHeader/>
             {children}
         </div>
