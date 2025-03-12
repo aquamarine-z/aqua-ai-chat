@@ -53,10 +53,10 @@ function UploaderPc(props: UploaderProps) {
 function Uploader() {
     const languageStore = useLanguageStore()
     return <>
-        <div className={"h-[240px] w-full flex items-center justify-center rounded-md flex-col gap-2"}>
-            <FileIcon className={"w-8 h-8 "}/>
+        <div className={"h-[240px] w-full flex items-center justify-center rounded-md flex-col gap-3.5"}>
+            <FileIcon className={"w-8 h-8 stroke-foreground/50"}/>
             <span
-                className={"text-xl font-semibold"}>{languageStore.language['input-box.attachment.upload.label']}</span>
+                className={"text-lg font-semibold"}>{languageStore.language['input-box.attachment.upload.label']}</span>
             <span
                 className={"text-md font-medium text-foreground/30"}>{languageStore.language['input-box.attachment.upload.message']}</span>
             <Button variant={"secondary"}
