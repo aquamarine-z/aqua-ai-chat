@@ -4,6 +4,7 @@ import {AttachmentUploader} from "@/components/input-box/attachment-uploader";
 import {Button} from "@/components/ui/button";
 import {SendIcon} from "lucide-react";
 import {useLanguageStore} from "@/store/language-store";
+import {ModelSelector} from "@/components/input-box/model-selector";
 
 export function InputBox() {
     const inputStore = useInputStore();
@@ -16,9 +17,10 @@ export function InputBox() {
             onChange={e => {
                 inputStore.setContent(e.target.value)
             }} value={inputStore.content}/>
-        <div className={"min-h-12 flex flex-row items-center px-2"}>
+        <div className={"min-h-12 flex flex-row items-center px-2 gap-2"}>
             <AttachmentUploader/>
             <div className={"grow"}/>
+            <ModelSelector/>
             <Button className={"rounded-full h-10 w-10"} disabled={inputStore.isEmpty()}>
                 <SendIcon/>
             </Button>
