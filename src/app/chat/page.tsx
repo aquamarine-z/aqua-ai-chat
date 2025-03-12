@@ -1,10 +1,10 @@
 'use client'
-import {InputBox} from "@/components/input-box";
+import {InputBox} from "@/components/input-box/input-box";
 
 export default function ChatPage() {
     return <>
         <div className={ "fixed bottom-2 w-full flex flex-col items-center justify-center "}>
-            <div className={"w-full h-fit rounded-md px-4"}>
+            <div className={"max-w-4xl w-full h-fit rounded-md px-4"}>
                 <InputBox/>
             </div>
         </div>

@@ -1,5 +1,8 @@
 import {useInputStore} from "@/store/input-store";
 import {Textarea} from "@/components/ui/textarea";
+import {AttachmentUploader} from "@/components/input-box/attachment-uploader";
+import {Button} from "@/components/ui/button";
+import {SendIcon} from "lucide-react";
 
 export function InputBox() {
     const inputStore = useInputStore();
@@ -10,6 +13,12 @@ export function InputBox() {
             onChange={e => {
                 inputStore.setContent(e.target.value)
             }} value={inputStore.content}/>
-        <div className={"min-h-12 flex flex-row"}></div>
+        <div className={"min-h-12 flex flex-row items-center px-2"}>
+            <AttachmentUploader/>
+            <div className={"grow"}/>
+            <Button className={"rounded-full h-10 w-10"} disabled={inputStore.isEmpty()}>
+                <SendIcon/>
+            </Button>
+        </div>
     </div>
 }

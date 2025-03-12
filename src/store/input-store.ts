@@ -6,6 +6,7 @@ interface InputStore {
     content: string;
     setContent: (newContent: SetStateAction<string>) => void;
     clearStore: () => void;
+    isEmpty: () => boolean;
 }
 
 export const useInputStore = create<InputStore>((set, get) => ({
@@ -15,5 +16,9 @@ export const useInputStore = create<InputStore>((set, get) => ({
     },
     clearStore: () => {
         set({...get(), content: ""})
+    },
+    isEmpty: () => {
+        const {content} = get();
+        return content === "" || (!content)
     }
 }))
