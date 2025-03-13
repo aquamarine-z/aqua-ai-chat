@@ -116,7 +116,7 @@ export function InputBox() {
                     }
                     
                 }
-            }} className={"rounded-full h-10 w-10 hover:cursor-pointer"} disabled={(!chatStore.getCurrentSession().streaming)&&inputStore.isEmpty()}>
+            }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"} disabled={(!chatStore.getCurrentSession().streaming)&&inputStore.isEmpty()}>
                 {chatStore.getCurrentSession().streaming ? <SquareIcon/> : <SendIcon/>}
             </Button>
         </div>

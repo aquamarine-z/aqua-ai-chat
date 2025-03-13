@@ -7,11 +7,11 @@ export default function ChatPageLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <body className={"bg-blue-50 min-h-[100vh] w-full"}>
+        <>
             <PageHeader/>
             {children}
-            
-        </body>
+
+        </>
        
 
 

@@ -21,7 +21,7 @@ interface UploaderProps {
 function UploaderMobile(props: UploaderProps) {
     const languageStore = useLanguageStore()
     return <Drawer open={props.open} onOpenChange={(v) => props.setOpen(v)}>
-        <Button variant={"outline"} className={"rounded-full  h-10 w-10 hover:cursor-pointer "}
+        <Button variant={"outline"} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer "}
                 onClick={() => props.setOpen(true)}>
             <UploadIcon/>
         </Button>
@@ -37,7 +37,7 @@ function UploaderMobile(props: UploaderProps) {
 function UploaderPc(props: UploaderProps) {
     const languageStore = useLanguageStore()
     return <Dialog open={props.open} onOpenChange={(v) => props.setOpen(v)}>
-        <Button variant={"outline"} className={"rounded-full  h-10 w-10 hover:cursor-pointer "}
+        <Button size={"icon"} variant={"outline"} className={"rounded-full h-10 w-10 hover:cursor-pointer "}
                 onClick={() => props.setOpen(true)}>
             <UploadIcon/>
         </Button>

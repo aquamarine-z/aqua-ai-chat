@@ -14,10 +14,11 @@ export function ModelSelector() {
     useEffect(() => {
         setModelName(chatStore.getCurrentSession().modelConfig.name)
     }, []);
-    return <DropdownMenu open={open} onOpenChange={setOpen}>
+    return <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild >
-            <Button variant={"ghost"} className={"rounded-full w-fit flex flex-row items-center px-2 justify-end"}>
-                <span className={"grow text-center"}>
+            <Button variant={"ghost"}
+                    className={"rounded-full overflow-x-hidden w-fit  flex flex-row items-center px-2 justify-end"}>
+                <span className={"grow text-center text-sm sm:text-md"}>
                     {modelName}
                 </span>
                 <ChevronUp className={"transition stroke-foreground/60 " + (open ? "rotate-180" : "")}/>

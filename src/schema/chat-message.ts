@@ -4,7 +4,8 @@ export const ChatMessageContentSchema = z.string().or(z.any())
 export const ChatMessageSchema = z.object({
     contents: z.array(ChatMessageContentSchema),
     role: z.enum(["user", "assistant", "system"]),
-    streaming: z.boolean()
+    streaming: z.boolean(),
+    
 })
 export type ChatMessageContent = z.infer<typeof ChatMessageContentSchema>
 export type ChatMessage = z.infer<typeof ChatMessageSchema>

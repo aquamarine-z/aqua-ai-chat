@@ -1,3 +1,4 @@
+'use client'
 import {ChatMessage} from "@/schema/chat-message";
 import {SetStateAction} from "react";
 import Markdown from "react-markdown";
@@ -10,9 +11,9 @@ export interface ChatFragmentProps {
 }
 
 export function ChatFragment(props: ChatFragmentProps) {
-    return <div className={"my-3 w-full h-fit flex flex-col overflow-y-auto gap-4"}>
+    return <div className={"my-3 w-full h-fit flex flex-col overflow-y-auto gap-6"}>
         <div className={cn("flex flex-row", props.message.role === "user" ? "justify-end" : "justify-start")}>
-            <div className={"w-fit h-fit max-w-full rounded-md px-2 py-4 bg-white"}>
+            <div className={cn("w-fit h-fit max-w-[90%] rounded-lg px-3 py-3 overflow-x-auto ",props.message.role==="user"?" bg-background":"")}>
                 <Markdown>{props.message.contents[0]}</Markdown>
             </div>
 
