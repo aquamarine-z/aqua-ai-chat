@@ -33,13 +33,14 @@ export class DeepseekApi implements ChatApi {
                 }
             })
             i++
-            if (i > 40) {
+            if (i > 300) {
                 updater(prev => {
                     return {
                         ...prev,
                         streaming: false,
                     }
                 })
+                config.onFinish?.()
                 clearInterval(inter)
             }
             if (this.stopStream) {
@@ -49,9 +50,10 @@ export class DeepseekApi implements ChatApi {
                         streaming: false,
                     }
                 })
+                config.onFinish?.()
                 clearInterval(inter)
             }
-        }, 500)
+        }, 20)
 
     }
 

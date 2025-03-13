@@ -14,7 +14,6 @@ import {ChatMessage} from "@/schema/chat-message";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
 
 
-
 export function InputBox() {
     const inputStore = useInputStore();
     const languageStore = useLanguageStore()
@@ -106,16 +105,20 @@ export function InputBox() {
                     chatStore.updateCurrentSession(prev => {
                         return {...prev, messages: [...prev.messages, userMessage]}
                     })
-                    chatListStateStore.scrollToBottomWithClientHeight()
+                    chatListStateStore.setAutoScroll(true)
                     if (!api) return
                     else {
                         chatApiRef.current = api as ChatApi
                         const config: ChatConfig = {
-                            session: chatStore.getCurrentSession()
+                            session: chatStore.getCurrentSession(),
+                            onFinish: () => {
+                                chatListStateStore.setAutoScroll(true)
+                            }
                         }
                         api.sendMessage(config, chatStore.updateCurrentSession)
                         inputStore.setContent("")
                     }
+                    //chatListStateStore.setAutoScroll(false)
                     
                 }
             }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"} disabled={(!chatStore.getCurrentSession().streaming)&&inputStore.isEmpty()}>

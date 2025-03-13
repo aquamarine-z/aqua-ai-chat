@@ -8,6 +8,8 @@ interface ChatListState {
     scrollToBottom: () => void,
     isAtBottom: () => boolean,
     scrollToBottomWithClientHeight: () => void,
+    autoScroll: boolean,
+    setAutoScroll: (value: boolean) => void,
 }
 
 export const useChatListStateStore = create<ChatListState>((set, get) => ({
@@ -19,31 +21,17 @@ export const useChatListStateStore = create<ChatListState>((set, get) => ({
         });
     },
     scrollToBottom: () => {
-        window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
+        console.log(document.body.scrollHeight)
+        window.scrollTo({top: document.body.scrollHeight, behavior: "auto"});
     },
     isAtBottom: () => {
         return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
     },
     scrollToBottomWithClientHeight: () => {
-        // 获取页面总高度
-
-
-        // 将页面滚动到底部
-        setTimeout(() => {
-            const pageHeight = document.body.scrollHeight;
-
-            // 获取视口高度
-            const viewportHeight = window.innerHeight;
-
-            // 计算滚动到底部所需的距离
-            const scrollToBottomDistance = pageHeight - viewportHeight;
-            window.scrollTo({top: scrollToBottomDistance, behavior: 'smooth'});
-
-            
-        }, 200)
-
-
-        // 等待滚动到底部完成后，向上滚动一个视口高度
-
+    },
+    autoScroll: false,
+    setAutoScroll: (value: boolean) => {
+        set(prev => ({...prev, autoScroll: value}));
     }
+
 }))
