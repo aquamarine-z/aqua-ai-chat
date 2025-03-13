@@ -3,7 +3,6 @@ import {useInputStore} from "@/store/input-store";
 import {Textarea} from "@/components/ui/textarea";
 import {AttachmentUploader} from "@/components/input-box/attachment-uploader";
 import {Button} from "@/components/ui/button";
-import {SendIcon, SquareIcon} from "lucide-react";
 import {useLanguageStore} from "@/store/language-store";
 import {ModelSelector} from "@/components/input-box/model-selector";
 import {Suggestions} from "@/components/input-box/suggesions";
@@ -12,6 +11,7 @@ import {useChatStore} from "@/store/chat-store";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import {ChatMessage} from "@/schema/chat-message";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
+import {ArrowDown, SendIcon, SquareIcon} from "lucide-react";
 
 
 export function InputBox() {
@@ -20,7 +20,7 @@ export function InputBox() {
     const chatStore = useChatStore()
     const [focus, setFocus] = useState(false);
     const divRef = useRef<HTMLDivElement>(null);
-    const isComposingRef = useRef(false); // 使用 ref 记录是否正在输入法组合输入
+    const isComposingRef = useRef(false);
     const chatApiRef = useRef<ChatApi>(null)
     const chatListStateStore = useChatListStateStore();
     useEffect(() => {
@@ -62,9 +62,9 @@ export function InputBox() {
         };
     }, []);
     useEffect(() => {
-        if(chatStore.getCurrentSession().streaming){
-            chatStore.updateCurrentSession(prev=>{
-                return {...prev,streaming:false}
+        if (chatStore.getCurrentSession().streaming) {
+            chatStore.updateCurrentSession(prev => {
+                return {...prev, streaming: false}
             })
         }
     }, []);
@@ -72,6 +72,7 @@ export function InputBox() {
         ref={divRef}
         className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
         <Suggestions open={focus}/>
+
         <Textarea
             placeholder={languageStore.language["input-box.input.placeholder"]}
             className={"w-full max-h-40 grow resize-none bg-transparent border-none shadow-none overflow-y-auto outline-0 focus:outline-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-none"}
@@ -80,6 +81,10 @@ export function InputBox() {
             }} value={inputStore.content}/>
         <div className={"min-h-12 flex flex-row items-center px-2 gap-2"}>
             <AttachmentUploader/>
+            {!chatListStateStore.isAtBottom &&
+                <Button variant={"secondary"} className={"w-8 h-8 sm:w-10 sm:h-10 rounded-full"} onClick={() => {
+                    chatListStateStore.scrollToBottom()
+                }}><ArrowDown/> </Button>}
             <div className={"grow"}/>
             <ModelSelector/>
             <Button onClick={() => {
@@ -95,6 +100,24 @@ export function InputBox() {
                     }
                     chatApiRef.current.stop()
                 } else {
+                    chatListStateStore.setAutoScroll(true)
+
+                    const addScrollListener = () => {
+                        let lastScrollTop = window.scrollY;
+                        const scrollListener = function () {
+                            let currentScrollTop = window.scrollY;
+                            //console.log(currentScrollTop, lastScrollTop)
+                            if (currentScrollTop < lastScrollTop) {
+                                chatListStateStore.setAutoScroll(false)
+                                window.removeEventListener("scroll", scrollListener)
+
+                            } else if (currentScrollTop > lastScrollTop) {
+                            }
+                            lastScrollTop = currentScrollTop; // 更新上一次滚动位置
+                        }
+                        window.addEventListener("scroll", scrollListener)
+                    }
+                    addScrollListener()
                     const model = chatStore.getCurrentSession().modelConfig
                     const api = getApiByModelName(model)
 
@@ -105,25 +128,27 @@ export function InputBox() {
                     chatStore.updateCurrentSession(prev => {
                         return {...prev, messages: [...prev.messages, userMessage]}
                     })
-                    chatListStateStore.setAutoScroll(true)
+
                     if (!api) return
                     else {
                         chatApiRef.current = api as ChatApi
                         const config: ChatConfig = {
                             session: chatStore.getCurrentSession(),
                             onFinish: () => {
-                                chatListStateStore.setAutoScroll(true)
+                                chatListStateStore.setAutoScroll(false)
+
                             }
                         }
                         api.sendMessage(config, chatStore.updateCurrentSession)
                         inputStore.setContent("")
                     }
-                    //chatListStateStore.setAutoScroll(false)
-                    
                 }
-            }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"} disabled={(!chatStore.getCurrentSession().streaming)&&inputStore.isEmpty()}>
+            }
+            } className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"}
+                    disabled={(!chatStore.getCurrentSession().streaming) && inputStore.isEmpty()}>
                 {chatStore.getCurrentSession().streaming ? <SquareIcon/> : <SendIcon/>}
             </Button>
+
         </div>
     </div>
 

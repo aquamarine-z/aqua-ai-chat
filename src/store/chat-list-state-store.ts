@@ -6,7 +6,8 @@ interface ChatListState {
     chatListElement?: HTMLDivElement;
     setChatListElement: (action: SetStateAction<HTMLDivElement | undefined>) => void;
     scrollToBottom: () => void,
-    isAtBottom: () => boolean,
+    isAtBottom: boolean,
+    setAtBottom: (value: boolean) => void,
     scrollToBottomWithClientHeight: () => void,
     autoScroll: boolean,
     setAutoScroll: (value: boolean) => void,
@@ -21,11 +22,12 @@ export const useChatListStateStore = create<ChatListState>((set, get) => ({
         });
     },
     scrollToBottom: () => {
-        console.log(document.body.scrollHeight)
+        //console.log(document.body.scrollHeight)
         window.scrollTo({top: document.body.scrollHeight, behavior: "auto"});
     },
-    isAtBottom: () => {
-        return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+    isAtBottom: true,
+    setAtBottom: (value) => {
+        set(prev => ({...prev, isAtBottom: value}))
     },
     scrollToBottomWithClientHeight: () => {
     },

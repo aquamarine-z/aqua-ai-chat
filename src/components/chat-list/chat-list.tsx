@@ -16,11 +16,26 @@ export function ChatList() {
         }
     }, [])
     useEffect(() => {
+        chatListStateStore.setAtBottom(true)
+        window.scrollTo({top: document.body.scrollHeight, behavior: "auto"})
+    }, [])
+    useEffect(() => {
         //console.log(chatListStateStore.autoScroll)
         if (chatListStateStore.autoScroll) {
             chatListStateStore.scrollToBottom();
         }
-    }, [chatStore, chatListStateStore]);
+    }, [chatStore, chatListStateStore.autoScroll]);
+    const checkWindowBottom = () => {
+        const isBottom = Math.ceil(window.scrollY + window.innerHeight) >= document.body.scrollHeight;
+        if (isBottom) {
+            chatListStateStore.setAtBottom(true)
+        }else chatListStateStore.setAtBottom(false)
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', checkWindowBottom);
+        return () => window.removeEventListener('scroll', checkWindowBottom);
+    }, []);
     return <div ref={divRef} className={"w-full h-full px-4 p-2 "}>
         {
             chatStore.getCurrentSession().messages.map((it, index) => <ChatFragment message={it} key={index}
