@@ -5,3 +5,4 @@ export const ThinkingSchema=z.object({
     finishTime:z.date().optional(),
     finished:z.boolean(),
 })
+export type Thinking=z.infer<typeof ThinkingSchema>

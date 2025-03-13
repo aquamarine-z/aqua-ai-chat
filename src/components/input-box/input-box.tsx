@@ -11,7 +11,8 @@ import {useEffect, useRef, useState} from "react";
 import {useChatStore} from "@/store/chat-store";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import {ChatMessage} from "@/schema/chat-message";
-import {StopIcon} from "next/dist/client/components/react-dev-overlay/ui/icons/stop-icon";
+import {useChatListStateStore} from "@/store/chat-list-state-store";
+
 
 
 export function InputBox() {
@@ -22,6 +23,7 @@ export function InputBox() {
     const divRef = useRef<HTMLDivElement>(null);
     const isComposingRef = useRef(false); // 使用 ref 记录是否正在输入法组合输入
     const chatApiRef = useRef<ChatApi>(null)
+    const chatListStateStore = useChatListStateStore();
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {
@@ -104,7 +106,7 @@ export function InputBox() {
                     chatStore.updateCurrentSession(prev => {
                         return {...prev, messages: [...prev.messages, userMessage]}
                     })
-
+                    chatListStateStore.scrollToBottomWithClientHeight()
                     if (!api) return
                     else {
                         chatApiRef.current = api as ChatApi
