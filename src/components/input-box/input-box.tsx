@@ -11,7 +11,7 @@ import {useChatStore} from "@/store/chat-store";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import {ChatMessage} from "@/schema/chat-message";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
-import {ArrowDown, SendIcon, SquareIcon} from "lucide-react";
+import {ArrowDown, ChevronDown, SendIcon, SquareIcon} from "lucide-react";
 
 
 export function InputBox() {
@@ -71,6 +71,10 @@ export function InputBox() {
     return <div
         ref={divRef}
         className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
+         {!chatListStateStore.isAtBottom &&
+                <Button variant={"outline"} className={"w-10 h-10 rounded-full absolute -top-11 -right-0 "} onClick={() => {
+                    chatListStateStore.scrollToBottom()
+                }}><ChevronDown/> </Button>}
         <Suggestions open={focus}/>
 
         <Textarea
@@ -81,10 +85,6 @@ export function InputBox() {
             }} value={inputStore.content}/>
         <div className={"min-h-12 flex flex-row items-center px-2 gap-2"}>
             <AttachmentUploader/>
-            {!chatListStateStore.isAtBottom &&
-                <Button variant={"secondary"} className={"w-8 h-8 sm:w-10 sm:h-10 rounded-full"} onClick={() => {
-                    chatListStateStore.scrollToBottom()
-                }}><ArrowDown/> </Button>}
             <div className={"grow"}/>
             <ModelSelector/>
             <Button onClick={() => {
