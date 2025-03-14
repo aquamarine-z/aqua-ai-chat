@@ -3,6 +3,7 @@ import {ChatApi, ChatConfig} from "@/api/index";
 import {SetStateAction} from "react";
 import {ChatSession} from "@/schema/chat-session";
 import {ChatMessage} from "@/schema/chat-message";
+import {Thinking} from "@/schema/chat-message-metadata/thinking";
 
 
 export class DeepseekApi implements ChatApi {
@@ -13,6 +14,7 @@ export class DeepseekApi implements ChatApi {
             role: "assistant",
             contents: [""],
             streaming: true,
+            thinking: {startTime: Date.now(), content: "", finished: false} as Thinking
         }
         updater(prev => {
             return {
@@ -24,8 +26,26 @@ export class DeepseekApi implements ChatApi {
         this.stopStream = false
         const userMessage = config.session?.messages[config.session?.messages.length - 1]
         let i = 0
+        let it = 0
+        const thinkingInterval = setInterval(() => {
+            if (it > 200) {
+                clearInterval(thinkingInterval)
+                botMessage.thinking!.finished = true
+            } else {
+                it++
+                botMessage.thinking!.content += it
+
+            }
+            updater(prev => {
+                return {
+                    ...prev,
+                    messages: prev.messages.concat()
+                }
+            })
+        }, 20)
         const inter = setInterval(() => {
             botMessage.contents[0] += i
+
             updater(prev => {
                 return {
                     ...prev,

@@ -29,7 +29,7 @@ export function ChatList() {
         const isBottom = Math.ceil(window.scrollY + window.innerHeight) >= document.body.scrollHeight;
         if (isBottom) {
             chatListStateStore.setAtBottom(true)
-        }else chatListStateStore.setAtBottom(false)
+        } else chatListStateStore.setAtBottom(false)
     };
 
     useEffect(() => {
