@@ -8,18 +8,19 @@ import {CopyIcon, RefreshCcw} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {ChatFragmentAction} from "@/components/chat-list/chat-fragment-action";
 import {useLanguageStore} from "@/store/language-store";
-import {useChatStore} from "@/store/chat-store";
-import {useInputStore} from "@/store/input-store";
 
 export interface ChatFragmentProps {
     message: ChatMessage,
     messageIndex: number,
-    updateMessage?: (action: SetStateAction<ChatMessage>) => void
+    updateMessage?: (action: SetStateAction<ChatMessage>) => void,
+    actions?: {
+        onRetry?: () => void
+    }
 }
 
 export function ChatFragment(props: ChatFragmentProps) {
     const language = useLanguageStore().language
-    const inputStore = useInputStore();
+    //const inputStore = useInputStore();
     return <div key={props.messageIndex} className={"my-3 w-full h-fit flex flex-col gap-6"}>
         <div className={cn("flex flex-row", props.message.role === "user" ? "justify-end" : "justify-start")}>
             <div className={"max-w-[90%] w-fit h-full flex flex-col  break-words gap-2"}>
@@ -57,7 +58,7 @@ export function ChatFragment(props: ChatFragmentProps) {
                             className={"h-8 w-8"}
                             variant={"ghost"}
                             onClick={() => {
-                                inputStore.chat?.(props.messageIndex)
+                                props.actions?.onRetry?.()
                             }}>
                             <RefreshCcw/>
                         </Button>

@@ -12,6 +12,7 @@ import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
 import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
 import {ChatMessage} from "@/schema/chat-message";
+import {useInputBoxStateStore} from "@/store/input-box-state-store";
 
 
 export function InputBox() {
@@ -23,6 +24,7 @@ export function InputBox() {
     const isComposingRef = useRef(false);
     const chatApiRef = useRef<ChatApi>(null)
     const chatListStateStore = useChatListStateStore();
+    const inputBoxStateStore = useInputBoxStateStore();
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {
@@ -62,7 +64,6 @@ export function InputBox() {
         };
     }, []);
     const chat = (messageIndex?: number) => {
-        
         if (chatStore.getCurrentSession().streaming) {
             chatStore.updateCurrentSession(prev => {
                 return {
@@ -123,12 +124,6 @@ export function InputBox() {
             }
         }
     }
-
-    useEffect(() => {
-
-        inputStore.setInputStore(prev => ({...prev, chat}))
-    }, []);
-    
     return <div
         ref={divRef}
         className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
@@ -149,7 +144,7 @@ export function InputBox() {
             <div className={"grow"}/>
             <ModelSelector/>
             <Button onClick={() => {
-                inputStore.chat?.()
+                chat()
             }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"}
                     disabled={(!chatStore.getCurrentSession().streaming) && inputStore.isEmpty()}>
                 {chatStore.getCurrentSession().streaming ? <SquareIcon/> : <SendIcon/>}
