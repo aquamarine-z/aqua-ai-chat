@@ -9,9 +9,9 @@ import {Suggestions} from "@/components/input-box/suggesions";
 import {useEffect, useRef, useState} from "react";
 import {useChatStore} from "@/store/chat-store";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
-import {ChatMessage} from "@/schema/chat-message";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
-import {ArrowDown, ChevronDown, SendIcon, SquareIcon} from "lucide-react";
+import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
+import {ChatMessage} from "@/schema/chat-message";
 
 
 export function InputBox() {
@@ -61,13 +61,74 @@ export function InputBox() {
             }
         };
     }, []);
-    useEffect(() => {
+    const chat = (messageIndex?: number) => {
+        
         if (chatStore.getCurrentSession().streaming) {
             chatStore.updateCurrentSession(prev => {
-                return {...prev, streaming: false}
+                return {
+                    ...prev,
+                    streaming: false
+                }
             })
+            if (!chatApiRef.current) {
+                return
+            }
+            chatApiRef.current.stop()
+        } else {
+            chatListStateStore.setAutoScroll(true)
+
+            const addScrollListener = () => {
+                let lastScrollTop = window.scrollY;
+                const scrollListener = function () {
+                    let currentScrollTop = window.scrollY;
+                    //console.log(currentScrollTop, lastScrollTop)
+                    if (currentScrollTop < lastScrollTop) {
+                        chatListStateStore.setAutoScroll(false)
+                        window.removeEventListener("scroll", scrollListener)
+
+                    } else if (currentScrollTop > lastScrollTop) {
+                    }
+                    lastScrollTop = currentScrollTop; // 更新上一次滚动位置
+                }
+                window.addEventListener("scroll", scrollListener)
+            }
+            addScrollListener()
+            const model = chatStore.getCurrentSession().modelConfig
+            const api = getApiByModelName(model)
+
+            let userMessage = {
+                role: "user",
+                contents: [inputStore.content],
+            } as ChatMessage
+            if (messageIndex) {
+                userMessage = chatStore.getCurrentSession().messages[messageIndex - 1]
+            } else {
+                inputStore.setContent("")
+            }
+            chatStore.updateCurrentSession(prev => {
+                return {...prev, messages: [...prev.messages, userMessage]}
+            })
+            if (!api) return
+            else {
+                chatApiRef.current = api as ChatApi
+                const config: ChatConfig = {
+                    session: chatStore.getCurrentSession(),
+                    onFinish: () => {
+                        chatListStateStore.setAutoScroll(false)
+                    },
+                    messageIndex: messageIndex,
+                }
+                api.sendMessage(config, chatStore.updateCurrentSession)
+
+            }
         }
+    }
+
+    useEffect(() => {
+
+        inputStore.setInputStore(prev => ({...prev, chat}))
     }, []);
+    
     return <div
         ref={divRef}
         className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
@@ -88,63 +149,8 @@ export function InputBox() {
             <div className={"grow"}/>
             <ModelSelector/>
             <Button onClick={() => {
-                if (chatStore.getCurrentSession().streaming) {
-                    chatStore.updateCurrentSession(prev => {
-                        return {
-                            ...prev,
-                            streaming: false
-                        }
-                    })
-                    if (!chatApiRef.current) {
-                        return
-                    }
-                    chatApiRef.current.stop()
-                } else {
-                    chatListStateStore.setAutoScroll(true)
-
-                    const addScrollListener = () => {
-                        let lastScrollTop = window.scrollY;
-                        const scrollListener = function () {
-                            let currentScrollTop = window.scrollY;
-                            //console.log(currentScrollTop, lastScrollTop)
-                            if (currentScrollTop < lastScrollTop) {
-                                chatListStateStore.setAutoScroll(false)
-                                window.removeEventListener("scroll", scrollListener)
-
-                            } else if (currentScrollTop > lastScrollTop) {
-                            }
-                            lastScrollTop = currentScrollTop; // 更新上一次滚动位置
-                        }
-                        window.addEventListener("scroll", scrollListener)
-                    }
-                    addScrollListener()
-                    const model = chatStore.getCurrentSession().modelConfig
-                    const api = getApiByModelName(model)
-
-                    const userMessage = {
-                        role: "user",
-                        contents: [inputStore.content],
-                    } as ChatMessage
-                    chatStore.updateCurrentSession(prev => {
-                        return {...prev, messages: [...prev.messages, userMessage]}
-                    })
-
-                    if (!api) return
-                    else {
-                        chatApiRef.current = api as ChatApi
-                        const config: ChatConfig = {
-                            session: chatStore.getCurrentSession(),
-                            onFinish: () => {
-                                chatListStateStore.setAutoScroll(false)
-
-                            }
-                        }
-                        api.sendMessage(config, chatStore.updateCurrentSession)
-                        inputStore.setContent("")
-                    }
-                }
-            }
-            } className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"}
+                inputStore.chat?.()
+            }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"}
                     disabled={(!chatStore.getCurrentSession().streaming) && inputStore.isEmpty()}>
                 {chatStore.getCurrentSession().streaming ? <SquareIcon/> : <SendIcon/>}
             </Button>

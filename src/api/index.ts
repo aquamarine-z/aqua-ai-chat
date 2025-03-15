@@ -6,6 +6,7 @@ import {SetStateAction} from "react";
 export class ChatConfig{
     session: ChatSession | undefined
     onFinish?: () => void;
+    messageIndex?:number;
 }
 export interface ChatApi {
     sendMessage:(config:ChatConfig,updater:(action:SetStateAction<ChatSession>)=>void)=>void

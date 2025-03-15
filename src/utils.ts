@@ -1,3 +1,4 @@
+'use client'
 import {SetStateAction} from "react";
 
 export function applySetStateAction<T>(prev: T, action: SetStateAction<T>): T {

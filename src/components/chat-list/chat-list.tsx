@@ -1,9 +1,10 @@
+'use client'
 import {useChatStore} from "@/store/chat-store";
 import {ChatFragment} from "@/components/chat-list/chat-fragment";
 
 import {applySetStateAction} from "@/utils";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 
 export function ChatList() {
     const chatStore = useChatStore()
@@ -36,9 +37,12 @@ export function ChatList() {
         window.addEventListener('scroll', checkWindowBottom);
         return () => window.removeEventListener('scroll', checkWindowBottom);
     }, []);
+    useEffect(() => {
+        //chatStore.repairCurrentSession()
+    }, [chatStore.currentSessionIndex]);
     return <div ref={divRef} className={"w-full h-full px-4 p-2 "}>
         {
-            chatStore.getCurrentSession().messages.map((it, index) => <ChatFragment message={it} key={index}
+           chatStore.getCurrentSession().messages.map((it, index) => <ChatFragment message={it} key={index}
                                                                                     messageIndex={index}
                                                                                     updateMessage={(action) => {
                                                                                         const newMessage = applySetStateAction(it, action)

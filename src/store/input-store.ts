@@ -1,12 +1,15 @@
+'use client'
 import {create} from "zustand/react";
 import {SetStateAction} from "react";
 import {applySetStateAction} from "@/utils";
 
-interface InputStore {
+ interface InputStore {
     content: string;
     setContent: (newContent: SetStateAction<string>) => void;
     clearStore: () => void;
     isEmpty: () => boolean;
+    chat: ((messageIndex?: number) => void) | undefined;
+    setInputStore: (action: SetStateAction<Partial<InputStore>>) => void;
 }
 
 export const useInputStore = create<InputStore>((set, get) => ({
@@ -20,5 +23,10 @@ export const useInputStore = create<InputStore>((set, get) => ({
     isEmpty: () => {
         const {content} = get();
         return content === "" || (!content)
+    },
+    chat: undefined,
+    setInputStore: (action) => {
+        const storeData = applySetStateAction(get(), action);
+        set({...get(), ...storeData})
     }
 }))
