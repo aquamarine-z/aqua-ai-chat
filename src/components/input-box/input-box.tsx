@@ -24,7 +24,7 @@ export function InputBox() {
     const isComposingRef = useRef(false);
     const chatApiRef = useRef<ChatApi>(null)
     const chatListStateStore = useChatListStateStore();
-    const inputBoxStateStore = useInputBoxStateStore();
+    
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {
