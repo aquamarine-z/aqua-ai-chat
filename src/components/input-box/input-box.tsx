@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {useLanguageStore} from "@/store/language-store";
 import {ModelSelector} from "@/components/input-box/model-selector";
 import {Suggestions} from "@/components/input-box/suggesions";
-import {useEffect, useRef, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 import {useChatStore} from "@/store/chat-store";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
@@ -15,7 +15,7 @@ import {ChatMessage} from "@/schema/chat-message";
 import {useInputBoxStateStore} from "@/store/input-box-state-store";
 
 
-export function InputBox() {
+export const InputBox = forwardRef((props, ref) => {
     const inputStore = useInputStore();
     const languageStore = useLanguageStore()
     const chatStore = useChatStore()
@@ -24,7 +24,7 @@ export function InputBox() {
     const isComposingRef = useRef(false);
     const chatApiRef = useRef<ChatApi>(null)
     const chatListStateStore = useChatListStateStore();
-    
+    const inputBoxStateStore = useInputBoxStateStore();
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {
@@ -63,7 +63,7 @@ export function InputBox() {
             }
         };
     }, []);
-    const chat = (messageIndex?: number) => {
+    const chat = (message?: ChatMessage) => {
         if (chatStore.getCurrentSession().streaming) {
             chatStore.updateCurrentSession(prev => {
                 return {
@@ -101,8 +101,8 @@ export function InputBox() {
                 role: "user",
                 contents: [inputStore.content],
             } as ChatMessage
-            if (messageIndex) {
-                userMessage = chatStore.getCurrentSession().messages[messageIndex - 1]
+            if (message) {
+                userMessage = message
             } else {
                 inputStore.setContent("")
             }
@@ -117,20 +117,22 @@ export function InputBox() {
                     onFinish: () => {
                         chatListStateStore.setAutoScroll(false)
                     },
-                    messageIndex: messageIndex,
                 }
                 api.sendMessage(config, chatStore.updateCurrentSession)
 
             }
         }
     }
+    useImperativeHandle(ref, () => ({
+        chat: chat
+    }));
     return <div
         ref={divRef}
         className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
-         {!chatListStateStore.isAtBottom &&
-                <Button variant={"outline"} className={"w-10 h-10 rounded-full absolute -top-11 -right-0 "} onClick={() => {
-                    chatListStateStore.scrollToBottom()
-                }}><ChevronDown/> </Button>}
+        {!chatListStateStore.isAtBottom &&
+            <Button variant={"outline"} className={"w-10 h-10 rounded-full absolute -top-11 -right-0 "} onClick={() => {
+                chatListStateStore.scrollToBottom()
+            }}><ChevronDown/> </Button>}
         <Suggestions open={focus}/>
 
         <Textarea
@@ -154,4 +156,4 @@ export function InputBox() {
     </div>
 
 
-}
+}) 

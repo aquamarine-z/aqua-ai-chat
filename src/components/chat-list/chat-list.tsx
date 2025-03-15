@@ -43,25 +43,22 @@ export function ChatList() {
     }, [chatStore.currentSessionIndex]);
     return <div ref={divRef} className={"w-full h-full px-4 p-2 "}>
         {
-           chatStore.getCurrentSession().messages.map((it, index) => <ChatFragment message={it} key={index}
-                                                                                   actions={{
-                                                                                       onRetry: () => {
-                                                                                           inputBoxStateStore?.chat?.(index)
-                                                                                       }
-                                                                                   }}
-                                                                                    messageIndex={index}
-                                                                                    updateMessage={(action) => {
-                                                                                        const newMessage = applySetStateAction(it, action)
+            chatStore.getCurrentSession().messages.map((it, index) => <ChatFragment
+                message={{...it, contents: [...it.contents]}} key={index}
+                messageIndex={index}
+                session={chatStore.getCurrentSession()}
+                updateMessage={(action) => {
+                    const newMessage = applySetStateAction(it, action)
 
-                                                                                        chatStore.updateCurrentSession(prev => {
-                                                                                            const messages = prev.messages
-                                                                                            messages[index] = newMessage
-                                                                                            return {
-                                                                                                ...prev,
-                                                                                                messages: messages,
-                                                                                            }
-                                                                                        })
-                                                                                    }}/>)
+                    chatStore.updateCurrentSession(prev => {
+                        const messages = prev.messages
+                        messages[index] = newMessage
+                        return {
+                            ...prev,
+                            messages: messages,
+                        }
+                    })
+                }}/>)
         }
     </div>
 }
