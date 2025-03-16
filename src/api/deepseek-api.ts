@@ -41,7 +41,7 @@ export class DeepseekApi implements ChatApi {
         //console.log(lastMessage)
         botMessage.thinking!.content += lastMessage.contents[0]
         botMessage.thinking!.finished = false
-       // botMessage.thinking!.finishTime = Date.now()
+       botMessage.thinking!.finishTime = Date.now()
         const inter = setInterval(() => {
             botMessage.contents[0] += i
 

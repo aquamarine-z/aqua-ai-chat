@@ -28,7 +28,7 @@ export const ChatFragment = memo(
         //const setInputContent = useInputStore(state => state.setContent)
         const inputBoxState = useInputBoxStateStore()
         const streaming = useChatStore(state => {
-            return state.sessions[state.currentSessionIndex].streaming
+            return state.getCurrentSession().streaming
         })
         return (
             <div key={props.messageIndex} className={"my-3 w-full h-fit flex flex-col gap-6"}>
