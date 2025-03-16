@@ -12,6 +12,7 @@ interface ChatStore {
     getCurrentSession: () => ChatSession;
     updateCurrentSession: (session: SetStateAction<ChatSession>) => void;
     repairCurrentSession: () => void;
+    setChatStore: (actions: SetStateAction<Partial<ChatStore>>) => void;
 }
 
 export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) => ({
@@ -48,6 +49,11 @@ export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) =>
         if (changed) {
             get().updateCurrentSession(action => ({...action, messages}))
         }
+    },
+    setChatStore: (action) => {
+        const data = get()
+        const value = applySetStateAction(data, action)
+        set({...data, ...value})
     }
 
 }), {name: "chat-store"}))

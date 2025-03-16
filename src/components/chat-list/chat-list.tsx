@@ -17,11 +17,14 @@ export function ChatList() {
         return () => {
             chatListStateStore.setChatListElement(undefined);
         }
-    }, [])
+    }, [chatStore.currentSessionIndex])
     useEffect(() => {
         chatListStateStore.setAtBottom(true)
         window.scrollTo({top: document.body.scrollHeight, behavior: "auto"})
-    }, [])
+    }, [chatStore.currentSessionIndex])
+    useEffect(() => {
+        chatStore.repairCurrentSession()
+    }, [chatStore.currentSessionIndex]);
     useEffect(() => {
         //console.log(chatListStateStore.autoScroll)
         if (chatListStateStore.autoScroll) {

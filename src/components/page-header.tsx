@@ -1,10 +1,26 @@
+'use client'
 import {Button} from "@/components/ui/button";
+import {useChatStore} from "@/store/chat-store";
+import {defaultChatSession} from "@/schema/chat-session";
+import {SessionSelector} from "@/components/session-selector";
 
 export function PageHeader() {
-    return <div className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-blue-50 via-blue-50 via-80% to-transparent z-40"}>
+    const chatStore = useChatStore()
+
+    return <div
+        className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-blue-50 via-blue-50 via-80% to-transparent z-40"}>
         <div className={"w-full h-full flex flex-row items-center px-4"}>
-            <Button className={"h-2/3 hidden sm:block"} variant={"link"}>Aqua AI Chat</Button>
+            <Button className={"h-2/3 hidden sm:block"} variant={"link"} onClick={() => {
+                chatStore.setChatStore(prev => {
+                    return {
+                        ...prev,
+                        sessions: prev.sessions?.concat(defaultChatSession),
+                        currentSessionIndex: prev.sessions?.length,
+                    }
+                })
+            }}>Aqua AI Chat</Button>
             <div className={"grow"}/>
+            <SessionSelector/>
         </div>
     </div>
 }
