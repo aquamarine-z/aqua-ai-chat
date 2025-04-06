@@ -9,6 +9,6 @@ interface LanguageStore {
 }
 
 export const useLanguageStore = create<LanguageStore>((set, get) => ({
-    language: en,
-    name: "en",
+    language: zh_cn,
+    name: "zh_cn",
 }))

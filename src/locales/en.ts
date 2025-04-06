@@ -2,6 +2,8 @@ import {zh_cn} from "@/locales/zh_cn";
 
 export const en = {
     ...zh_cn,
+    "page-header.title": "Aqua AI Chat",
+    
     "input-box.input.placeholder": "What do you want to know?",
     "input-box.attachment.title": "Upload",
     "input-box.attachment.upload.label": "Attachment Upload",

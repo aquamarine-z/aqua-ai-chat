@@ -1,4 +1,6 @@
 export const zh_cn = {
+    "page-header.title": "Aqua AI Chat",
+    
     "input-box.input.placeholder": "请输入你的问题",
     "input-box.attachment.title": "附件上传",
     "input-box.attachment.upload.label": "上传附件",

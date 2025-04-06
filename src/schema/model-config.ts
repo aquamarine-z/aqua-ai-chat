@@ -9,6 +9,9 @@ export const models = [
     },
     {
         name: "Deepseek R1 32b"
+    },
+    {
+        name:"Car Assistant"
     }
 ]
 export const ModelConfigSchema = z.object({
