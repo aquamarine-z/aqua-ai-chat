@@ -9,7 +9,7 @@ export function PageHeader() {
     const chatStore = useChatStore()
     const language=useLanguageStore()
     return <div
-        className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-blue-50 via-blue-50 via-80% to-transparent z-40"}>
+        className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-purple-50 via-purple-50 via-80% to-transparent z-40"}>
         <div className={"w-full h-full flex flex-row items-center px-4"}>
             <Button className={"h-2/3 hidden sm:block"} variant={"link"} onClick={() => {
                 chatStore.setChatStore(prev => {

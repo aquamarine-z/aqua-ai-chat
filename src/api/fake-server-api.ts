@@ -40,6 +40,11 @@ export class FakeServerApi implements ChatApi {
                         messages: prev.messages.concat()
                     }
                 })
+                if (i >= responseThinkingContent.length - 1) {
+                    botMessage.thinking!.finishTime = Date.now()
+                    botMessage.thinking!.finished = true
+                }
+
             }, i * deltaTime)
         }
         botMessage.thinking!.finishTime = Date.now()
