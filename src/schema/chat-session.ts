@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {ChatMessageContentSchema} from "@/schema/chat-message";
+import {ChatMessageContentSchema, defaultGreetingMessage} from "@/schema/chat-message";
 import {defaultModelConfig, ModelConfigSchema} from "@/schema/model-config";
 
 export const ChatSessionSchema = z.object({
@@ -10,7 +10,7 @@ export const ChatSessionSchema = z.object({
 })
 export type ChatSession = z.infer<typeof ChatSessionSchema>
 export const defaultChatSession: ChatSession = {
-    messages: [],
+    messages: [defaultGreetingMessage],
     modelConfig: defaultModelConfig,
     name: "New Conversation",
     streaming: false,

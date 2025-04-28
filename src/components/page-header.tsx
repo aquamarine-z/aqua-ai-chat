@@ -8,6 +8,7 @@ import {useLanguageStore} from "@/store/language-store";
 export function PageHeader() {
     const chatStore = useChatStore()
     const language=useLanguageStore()
+    
     return <div
         className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-purple-50 via-purple-50 via-80% to-transparent z-40"}>
         <div className={"w-full h-full flex flex-row items-center px-4"}>

@@ -13,6 +13,7 @@ interface ChatStore {
     updateCurrentSession: (session: SetStateAction<ChatSession>) => void;
     repairCurrentSession: () => void;
     setChatStore: (actions: SetStateAction<Partial<ChatStore>>) => void;
+    removeSession: (index: number) => void;
 }
 
 export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) => ({
@@ -54,6 +55,28 @@ export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) =>
         const data = get()
         const value = applySetStateAction(data, action)
         set({...data, ...value})
+    },
+    removeSession:(index)=>{
+        if(get().sessions.length === 1) {
+            set(prev=>{
+                return {
+                    ...prev,
+                    sessions: [defaultChatSession],
+                    currentSessionIndex:0,
+                }
+            })
+        }else{
+
+            const sessions = get().sessions
+            sessions.splice(index, 1)
+            set(prev => {
+                return {
+                    ...prev,
+                    sessions,
+                    currentSessionIndex: Math.max(0, prev.currentSessionIndex - 1),
+                }
+            })
+        }
     }
 
 }), {name: "chat-store"}))

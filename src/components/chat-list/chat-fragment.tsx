@@ -12,6 +12,7 @@ import {isEqual} from "lodash";
 import {ChatSession} from "@/schema/chat-session";
 import {useInputBoxStateStore} from "@/store/input-box-state-store";
 import {useChatStore} from "@/store/chat-store";
+import {Suggestion} from "@/components/chat-list/suggestions";
 
 export interface ChatFragmentProps {
     message: ChatMessage,
@@ -46,7 +47,13 @@ export const ChatFragment = memo(
                                 typeof it === "string" ? <Markdown key={index}>{it}</Markdown> : <></>
                             )}
                         </div>
-                        <div
+                        {
+                            props.message.suggestion&&<Suggestion message={props.message}>
+
+                            </Suggestion>
+                        }
+                        {
+                            props.message.metaType!=="greeting"&&<div
                             className={cn("w-full flex gap-1", props.message.role === "user" ? "flex-row-reverse" : "flex-row")}>
                             <ChatFragmentAction
                                 trigger={
@@ -63,7 +70,9 @@ export const ChatFragment = memo(
                                         <Button className={"h-8 w-8"} variant={"ghost"}
                                                 disabled={streaming || false}
                                                 onClick={() => {
-                                                    inputBoxState?.inputBoxRef?.current?.chat?.(props.session.messages[props.messageIndex - 1])
+                                                    //get the last user message
+                                                    const lastUserMessage= props.session.messages.reverse().find(it => it.role === "user")
+                                                    inputBoxState?.inputBoxRef?.current?.chat?.(lastUserMessage)
                                                 }}>
                                             <RefreshCcw/>
                                         </Button>
@@ -72,6 +81,8 @@ export const ChatFragment = memo(
                                 />
                             )}
                         </div>
+                        }
+
                     </div>
                 </div>
             </div>

@@ -1,11 +1,13 @@
 import React, {useState} from "react";
 import {useMediaQuery} from "react-responsive";
-import {Dialog, DialogContent} from "@/components/ui/dialog";
+import {Dialog, DialogClose, DialogContent, DialogHeader, DialogTrigger} from "@/components/ui/dialog";
 import {Drawer, DrawerContent} from "@/components/ui/drawer";
 import {Button} from "@/components/ui/button";
-import {LayoutList, Pencil, PlusIcon} from "lucide-react";
+import {LayoutList, Pencil, PlusIcon, X} from "lucide-react";
 import {useChatStore} from "@/store/chat-store";
-import {defaultChatSession} from "@/schema/chat-session";
+import {ChatSession, defaultChatSession} from "@/schema/chat-session";
+import {DialogBody} from "next/dist/client/components/react-dev-overlay/ui/components/dialog";
+import {useLanguageStore} from "@/store/language-store";
 
 interface SessionSelectorProps {
     open: boolean,
@@ -50,10 +52,10 @@ function SessionSelectorMobile(props: SessionSelectorProps) {
 
 export function SessionSelectorContent(props: SessionSelectorProps) {
     const chatStore = useChatStore()
-
-    return <div className={"w-full h-full flex items-center justify-center"}>
+    const language = useLanguageStore().language
+    return <div className={"w-full h-[85%] flex items-center justify-center"}>
         <div
-            className={"h-[80%] w-[90%] overflow-y-auto rounded-lg px-2 py-3 flex flex-col items-center justify-start gap-2"}>
+            className={"h-[90%] w-[90%] overflow-y-auto"}>
             <div className={"w-full my-2 flex flex-row items-center justify-between"}>
                 <h1 className={"select-none text-foreground/60 text-xl font-bold"}>Navigator</h1>
                 <Button variant={"ghost"}>
@@ -72,7 +74,7 @@ export function SessionSelectorContent(props: SessionSelectorProps) {
                         props.setOpen(false)
                     }}>
                 <PlusIcon/>
-                <span className={"text-lg w-full text-center"}>
+                <span className={"text-lg w-full text-center font-semibold"}>
                     Create a new chat conversation
                 </span>
             </Button>
@@ -81,27 +83,99 @@ export function SessionSelectorContent(props: SessionSelectorProps) {
 
             </div>
             {chatStore.sessions.map((session, index) => {
-                return <div
-                    onClick={() => {
-                        chatStore.setChatStore(prev => {
-                            return {
-                                ...prev,
-                                currentSessionIndex: index,
-                            }
-                        })
-                        props.setOpen(false)
-                    }}
-                    className={"select-none hover:bg-foreground/20 hover:cursor-pointer rounded-md w-full flex flex-row items-center justify-start gap-5"}>
-                        <span className={"text-lg grow text-center"}>
-                            {session.name}
-                        </span>
-                    <div className={"flex flex-row w-fit"}>
-                        <Button variant={"ghost"}>
-                            <Pencil/>
-                        </Button>
-                    </div>
-                </div>
+                return <SessionItem closeSelector={() => {
+                    props.setOpen(false)
+                }} session={session} index={index}></SessionItem>
             })}
+        </div>
+    </div>
+}
+
+function SessionItem(props: { session: ChatSession, index: number, closeSelector: () => void }) {
+    const chatStore = useChatStore()
+    const language = useLanguageStore().language
+    const [sessionNewName, setSessionNewName] = useState(props.session.name)
+    return <div className={"h-12 w-full flex flex-row items-center justify-start gap-5"}>
+        <Button
+            variant={"ghost"}
+            onClick={() => {
+                chatStore.setChatStore(prev => {
+                    return {
+                        ...prev,
+                        currentSessionIndex: props.index,
+                    }
+                })
+                props.closeSelector()
+            }}
+            className={"grow"}>
+                        <span className={"text-lg grow text-center"}>
+                            {props.session.name}
+                        </span>
+
+        </Button>
+        <div className={"flex flex-row w-fit"}>
+            <Dialog>
+                <DialogTrigger>
+                    <Button variant={"ghost"} className={""}>
+                        <Pencil/>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        {language["chat-session-selector.session.rename.dialog.title"]}
+                    </DialogHeader>
+                    <DialogBody className={"flex flex-col gap-5 items-center w-full h-full"}>
+                        <input value={sessionNewName}
+                               className={"w-[80%] border-[1px] border-primary/40 px-4 py-2 rounded-md"}
+                               onChange={event => {
+                                   setSessionNewName(event.target.value)
+                               }}/>
+                        <div className={"flex flex-row w-[80%] gap-2 items-center justify-around"}>
+                            <DialogClose className={"w-[40%]"}>
+                                <Button className={"w-full"} variant={"secondary"}>{language["cancel"]}</Button>
+                            </DialogClose>
+                            <DialogClose className={"w-[40%]"}>
+                                <Button className={"w-full"} onClick={() => {
+                                    chatStore.updateCurrentSession(prev => {
+                                        return {
+                                            ...prev,
+                                            name: sessionNewName,
+                                        }
+                                    })
+                                }}>{language["confirm"]}</Button>
+                            </DialogClose>
+                        </div>
+                    </DialogBody>
+                </DialogContent>
+            </Dialog>
+            <Dialog>
+                <DialogTrigger>
+                    <Button variant={"ghost"}>
+                        <X/>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+
+                        {language["chat-session-selector.session.delete.dialog.title"]}
+                    </DialogHeader>
+                    <DialogBody className={"flex flex-col gap-5 items-center w-full h-full"}>
+                        <div className={"w-[80%] text-center"}>
+                            {language["chat-session-selector.session.delete.dialog.content"]}
+                        </div>
+                        <div className={"flex flex-row w-[80%] gap-2 items-center justify-around"}>
+                            <DialogClose className={"w-[40%]"}>
+                                <Button className={"w-full"} variant={"secondary"}>{language["cancel"]}</Button>
+                            </DialogClose>
+                            <DialogClose className={"w-[40%]"}>
+                                <Button className={"w-full"} onClick={() => {
+                                    chatStore.removeSession(props.index)
+                                }}>{language["confirm"]}</Button>
+                            </DialogClose>
+                        </div>
+                    </DialogBody>
+                </DialogContent>
+            </Dialog>
         </div>
     </div>
 }

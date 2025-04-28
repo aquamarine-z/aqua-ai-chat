@@ -1,4 +1,6 @@
 export const zh_cn = {
+    "confirm":"确定",
+    "cancel":"取消",
     "page-header.title": "Aqua AI Chat",
     
     "input-box.input.placeholder": "请输入你的问题",
@@ -15,4 +17,13 @@ export const zh_cn = {
     "chat-fragment.actions.retry":"重试",
     "chat-fragment.actions.good-feedback":"点赞此内容",
     "chat-fragment.actions.bad-feedback":"不喜欢此内容",
+
+    "chat-fragment.suggestion.suggestion-title": "猜你想问",
+
+    "chat-session-selector.session.delete": "删除会话",
+    "chat-session-selector.session.delete.dialog.title": "删除会话",
+    "chat-session-selector.session.delete.dialog.content": "是否确认删除会话?",
+    "chat-session-selector.session.rename": "重命名会话",
+    "chat-session-selector.session.rename.dialog.title": "重命名会话",
+    "chat-session-selector.session.rename.dialog.content": "请输入会话名称",
 }

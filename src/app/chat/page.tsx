@@ -11,7 +11,7 @@ export default function ChatPage() {
         inputBoxState.setInputBoxStateStore(prevState => ({...prevState,inputBoxRef}))
     }, []);
     return <>
-        <div className={"w-full min-h-[95vh] h-fit relative flex flex-col items-center"}>
+        <div className={"w-full min-h-[95vh] h-fit relative flex flex-col items-center "}>
             <div className={"relative min-h-full grow max-w-4xl w-full px-4"}>
                 <ChatList/>
             </div>
