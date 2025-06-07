@@ -151,3 +151,16 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+@theme {
+  --color-electric-violet-50: #FCF2FF;
+  --color-electric-violet-100: #F9E6FF;
+  --color-electric-violet-200: #EFBFFF;
+  --color-electric-violet-300: #E299FF;
+  --color-electric-violet-400: #C44DFF;
+  --color-electric-violet-500: #9900ff;
+  --color-electric-violet-600: #8200E6;
+  --color-electric-violet-700: #6600BF;
+  --color-electric-violet-800: #4A0099;
+  --color-electric-violet-900: #320073;
+  --color-electric-violet-950: #1C004A;
+}

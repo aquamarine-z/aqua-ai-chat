@@ -7,7 +7,8 @@ import {useChatListStateStore} from "@/store/chat-list-state-store";
 import {useEffect} from "react";
 import {useInputBoxStateStore} from "@/store/input-box-state-store";
 import {Virtuoso} from "react-virtuoso";
-
+import styles from "./chat-list.module.css"
+import {cn} from "@/lib/utils";
 export function ChatList() {
     const chatStore = useChatStore()
     const chatListStateStore = useChatListStateStore()
@@ -39,9 +40,10 @@ export function ChatList() {
     useEffect(() => {
     }, [chatStore.currentSessionIndex]);
     const messages = chatStore.getCurrentSession().messages
-    return <Virtuoso followOutput={true} className={"w-full h-full py-2 grow overflow-y-auto flex items-center "}
+    return <Virtuoso followOutput={true} className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center ",styles["chat-list-scroll"])}
                      data={messages}
                      overscan={500}
+
                      initialTopMostItemIndex={messages.length - 1}
                      itemContent={(index, item) => {
                          return <div className={"px-10 w-full flex items-center justify-center"}>
