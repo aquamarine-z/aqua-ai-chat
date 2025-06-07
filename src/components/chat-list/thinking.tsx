@@ -25,10 +25,6 @@ export function Thinking(props: ThinkingProps) {
                 </AccordionTrigger>
                 <AccordionContent className={"border-x-2 border-foreground/20 px-3 py-3 break-words "}>
                     <motion.div
-                        initial={{height: 0, opacity: 0}}
-                        animate={{height: "auto", opacity: 1}}
-                        exit={{height: 0, opacity: 0}}
-                        transition={{duration: 0.3}}
                         className={"break-words"}
                     >
                         <Markdown>{props.message.thinking!.content}</Markdown>

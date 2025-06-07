@@ -126,9 +126,9 @@ export const InputBox = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         chat: chat
     }));
-    return <div
+    return <div className={"w-full h-fit px-2 flex flex-row items-center justify-center "}><div
         ref={divRef}
-        className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 px-2 ">
+        className="transition-all relative w-full min-h-28 h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 min-h-fit  px-2 max-w-5xl ">
         {!chatListStateStore.isAtBottom &&
             <Button variant={"outline"} className={"w-10 h-10 rounded-full absolute -top-11 -right-0 "} onClick={() => {
                 chatListStateStore.scrollToBottom()
@@ -153,7 +153,7 @@ export const InputBox = forwardRef((props, ref) => {
             </Button>
 
         </div>
-    </div>
+    </div></div>
 
 
 }) 

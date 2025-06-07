@@ -20,6 +20,7 @@ export function Suggestions(props: SuggestionsProps) {
                 exit={{opacity: 0, y: -10}}
                 transition={{duration: 0.1}}
                 className="w-full max-h-40 overflow-y-auto"
+                style={{scrollbarWidth: "none"}}
             >
                 {availableSuggestions.map((it, index) => (
                     <Button
