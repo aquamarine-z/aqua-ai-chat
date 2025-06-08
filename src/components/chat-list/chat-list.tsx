@@ -45,8 +45,8 @@ export function ChatList() {
                      ref={virtuosoRef}
                      initialTopMostItemIndex={messages.length - 1}
                      itemContent={(index, item) => {
-                         return <div className={"px-10 w-full flex items-center justify-center"}>
-                             <div className={"max-w-5xl w-full"}>
+                         return <div className={"w-full flex items-center justify-center"}>
+                             <div className={" px-6 max-w-5xl w-full"}>
                                  <ChatFragment
                                      //@ts-ignore
                                      message={{...item, contents: [...item.contents]}} key={index}
