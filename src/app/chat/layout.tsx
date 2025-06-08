@@ -1,6 +1,8 @@
 'use client'
 import React from "react";
 import {PageHeader} from "@/components/page-header";
+import {SidebarProvider} from "@/components/ui/sidebar";
+import {AppSidebar} from "@/components/app-sidebar";
 
 export default function ChatPageLayout({
                                            children,
@@ -9,10 +11,15 @@ export default function ChatPageLayout({
 }>) {
     return (
         <div className={"w-screen h-screen"}>
-            <div className={"w-full h-full max-h-screen overflow-hidden flex flex-col items-center justify-start pb-2 bg-electric-violet-50" }>
-            <PageHeader/>
-            {children}
-        </div>
+            <SidebarProvider>
+                <AppSidebar/>
+                <div
+                    className={"w-full h-full max-h-screen overflow-hidden flex flex-col items-center justify-start pb-2 bg-electric-violet-50"}>
+                    <PageHeader/>
+                    {children}
+                </div>
+            </SidebarProvider>
+
         </div>
 
     );
