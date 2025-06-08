@@ -10,8 +10,9 @@ export const zh_cn = {
     "input-box.attachment.upload.message": "拖拽以上传附件",
     "input-box.attachment.upload.recent": "最近文件",
     "chat-fragment.thinking.thinking-title": (startTime: number, finishTime: number, finished: boolean) => {
+        //console.log(finished)
         if (finished) return `思考完成 共用时 ${Math.floor((finishTime - startTime) / 1000)} 秒`;
-        else return `正在思考 已用时 ${Math.floor((startTime - Date.now()) / 1000)} 秒`
+        else return `正在思考 已用时 ${Math.floor(( Date.now()-startTime) / 1000)} 秒`
     },
     "chat-fragment.actions.copy":"复制",
     "chat-fragment.actions.retry":"重试",

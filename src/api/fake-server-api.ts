@@ -30,16 +30,26 @@ const deltaTime = 10 // 每个字的间隔时间，单位毫秒
 
 export class FakeServerApi implements ChatApi {
     stopStream = false;
+
     sendMessage(config: ChatConfig, updater: (action: React.SetStateAction<ChatSession>) => void): void {
         const botMessage: ChatMessage = {
             role: "assistant",
             contents: [""],
             streaming: true,
-            thinking: {startTime: Date.now(), content: "", finished: false} as Thinking
+            thinking: {startTime: Date.now(), content: "", finished: false, open: true} as Thinking
         }
+        const userMessage: ChatMessage = {
+            ...config.userMessage
+        } as ChatMessage
+        updater(prev => {
+            return {
+                ...prev,
+                messages: [...prev.messages, userMessage],
+                streaming: true,
+            }
+        })
         this.stopStream = false
         //这是一个假服务器用于测试 现在需要按delta每个字地返回responseMessageContent和responseThinkingContent
-        botMessage.thinking = {startTime: Date.now(), content: "", finished: false} as Thinking
         updater(prev => {
             return {
                 ...prev,
@@ -47,30 +57,59 @@ export class FakeServerApi implements ChatApi {
                 streaming: true,
             }
         })
+        //console.log(botMessage.thinking?.finished)
         for (let i = 0; i < responseThinkingContent.length; i++) {
-            setTimeout(() => {
-                if (this.stopStream) {
-                    return
-                }
-                console.log(botMessage)
-                botMessage.thinking!.content += responseThinkingContent[i]
+            ((i: number) => {
+                setTimeout(() => {
+                    //console.log({...botMessage.thinking})
+                    if (this.stopStream) {
+                        //console.log("stop")
+                        if (!botMessage.thinking?.finished) {
+                            botMessage.thinking!.finishTime = Date.now()
+                            botMessage.thinking!.finished = true
+                            botMessage.thinking = {...botMessage.thinking!}
+                            console.log(botMessage)
+                            updater(prev => {
+                                return {
+                                    ...prev,
+                                    messages: prev.messages.concat()
+                                }
+                            })
+                        }
 
-                if (i >= responseThinkingContent.length - 1) {
-                    botMessage.thinking!.finishTime = Date.now()
-                    botMessage.thinking!.finished = true
-                }
-                botMessage.thinking = {...botMessage.thinking!}
-                updater(prev => {
-                    return {
-                        ...prev,
-                        messages: prev.messages.concat()
+                        return
                     }
-                })
-            }, i * deltaTime)
+                    //console.log({...botMessage})
+                    botMessage.thinking!.content += responseThinkingContent[i]
+
+                    if (i >= responseThinkingContent.length - 1) {
+                        botMessage.thinking!.finishTime = Date.now()
+                        botMessage.thinking!.finished = true
+                       // console.log(1)
+                    }
+                    //console.log(botMessage.thinking)
+                    //console.log(botMessage)
+                    botMessage.thinking = {...botMessage.thinking!}
+                    updater(prev => {
+                        return {
+                            ...prev,
+                            messages: prev.messages.concat()
+                        }
+                    })
+                }, i * deltaTime)
+            })(i)
+
         }
         for (let i = 0; i < responseMessageContent.length; i++) {
-            setTimeout(() => {
+            ((i:number)=>{
+                setTimeout(() => {
                 if (this.stopStream) {
+                    updater(prev => {
+                        return {
+                            ...prev,
+                            messages: prev.messages.concat()
+                        }
+                    })
                     return
                 }
                 botMessage.contents[0] += responseMessageContent[i]
@@ -93,6 +132,8 @@ export class FakeServerApi implements ChatApi {
                     }
                 }
             }, i * deltaTime + responseThinkingContent.length * deltaTime)
+            })(i)
+
         }
 
     }
