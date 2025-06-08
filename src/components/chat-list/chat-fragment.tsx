@@ -25,7 +25,7 @@ export interface ChatFragmentProps {
 export const ChatFragment = memo(
     function ChatFragment(props: ChatFragmentProps) {
         const language = useLanguageStore().language;
-        const inputStore=useInputStore()
+        const inputStore = useInputStore()
         //const messages = useChatStore(state => state.getCurrentSession().messages)
         //const setInputContent = useInputStore(state => state.setContent)
         const streaming = useChatStore(state => {
@@ -48,39 +48,39 @@ export const ChatFragment = memo(
                             )}
                         </div>
                         {
-                            props.message.suggestion&&<Suggestion message={props.message}>
+                            props.message.suggestion && <Suggestion message={props.message}>
 
                             </Suggestion>
                         }
                         {
-                            props.message.metaType!=="greeting"&&<div
-                            className={cn("w-full flex gap-1", props.message.role === "user" ? "flex-row-reverse" : "flex-row")}>
-                            <ChatFragmentAction
-                                trigger={
-                                    <Button disabled={props.message.streaming || false} className={"h-8 w-8"}
-                                            variant={"ghost"}>
-                                        <CopyIcon/>
-                                    </Button>
-                                }
-                                hover={<>{language["chat-fragment.actions.copy"]}</>}
-                            />
-                            {props.message.role !== "user" && (
+                            props.message.metaType !== "greeting" && <div
+                                className={cn("w-full flex gap-1", props.message.role === "user" ? "flex-row-reverse" : "flex-row")}>
                                 <ChatFragmentAction
                                     trigger={
-                                        <Button className={"h-8 w-8"} variant={"ghost"}
-                                                disabled={streaming || false}
-                                                onClick={() => {
-                                                    //get the last user message
-                                                    const lastUserMessage= props.session.messages.reverse().find(it => it.role === "user")
-                                                    inputStore.chat?.(lastUserMessage as ChatMessage)
-                                                }}>
-                                            <RefreshCcw/>
+                                        <Button disabled={props.message.streaming || false} className={"h-8 w-8"}
+                                                variant={"ghost"}>
+                                            <CopyIcon/>
                                         </Button>
                                     }
-                                    hover={<>{language["chat-fragment.actions.retry"]}</>}
+                                    hover={<>{language["chat-fragment.actions.copy"]}</>}
                                 />
-                            )}
-                        </div>
+                                {props.message.role !== "user" && (
+                                    <ChatFragmentAction
+                                        trigger={
+                                            <Button className={"h-8 w-8"} variant={"ghost"}
+                                                    disabled={streaming || false}
+                                                    onClick={() => {
+                                                        //获取以此index起始的上一条消息用户的内容
+                                                        const lastUserMessage = props.session.messages.slice(0, props.messageIndex).reverse().find(msg => msg.role === "user");
+                                                        inputStore.chat?.({...lastUserMessage} as ChatMessage)
+                                                    }}>
+                                                <RefreshCcw/>
+                                            </Button>
+                                        }
+                                        hover={<>{language["chat-fragment.actions.retry"]}</>}
+                                    />
+                                )}
+                            </div>
                         }
 
                     </div>
@@ -88,7 +88,7 @@ export const ChatFragment = memo(
             </div>
         );
     },
-    (prevProps: { message: any; }, nextProps: { message: any; }) => {
+    (prevProps: { message: any }, nextProps: { message: any }) => {
         return isEqual(prevProps.message, nextProps.message)
     }
 );

@@ -38,7 +38,6 @@ export const InputBox = forwardRef((props, ref) => {
         inputStore.updateInputStore(action => {
             action.chat = (message?: ChatMessage) => {
                 const currentSession = chatStore.getCurrentSession()
-                //console.log(currentSession.name)
                 if (currentSession.streaming) {
                     if (chatApiRef.current) {
                         chatApiRef.current.stop()
@@ -48,6 +47,7 @@ export const InputBox = forwardRef((props, ref) => {
                     })
                     return
                 }
+                chatListStateStore.scrollToBottom()
                 let userMessage: ChatMessage;
                 if (message) {
                     userMessage = {...message}
@@ -59,6 +59,7 @@ export const InputBox = forwardRef((props, ref) => {
                         return session
                     })
                 }
+
                 const modelName = currentSession.modelConfig;
                 const chatApi = getApiByModelName(modelName)
                 if (!chatApi) return;
@@ -131,7 +132,7 @@ export const InputBox = forwardRef((props, ref) => {
         }
     }, [chatStore.currentSessionIndex])
     //console.log(inputContent)
-    return <div className={"w-full h-fit px-2 flex flex-row items-center justify-center "}>
+    return <div className={"w-full h-fit px-4 pb-3 flex flex-row items-center justify-center "}>
         <div
             ref={divRef}
             className="transition-all relative w-full h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 min-h-fit  px-2 max-w-5xl ">
