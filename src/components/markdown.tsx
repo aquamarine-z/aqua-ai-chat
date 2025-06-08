@@ -70,7 +70,12 @@ export const MarkdownRenderer = (props: { content: string }) => {
                              },
                              pre: Pre,
                              code: Code,
-
+                             ul: ({node, ...props}) => {
+                                 return <ul {...props} className={cn("list-disc list-inside pl-4 my-0.5", styles["markdown"])}/>
+                             },
+                             ol: ({node, ...props}) => {
+                                 return <ol {...props} className={cn("list-decimal list-inside pl-4 my-0.5", styles["markdown"])}/>
+                             },
 
                          }
                      }
