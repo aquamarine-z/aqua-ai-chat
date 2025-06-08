@@ -89,6 +89,7 @@ export const ChatFragment = memo(
         );
     },
     (prevProps: { message: any }, nextProps: { message: any }) => {
+        //console.log("Comparing messages", prevProps.message, nextProps.message);
         return isEqual(prevProps.message, nextProps.message)
     }
 );
