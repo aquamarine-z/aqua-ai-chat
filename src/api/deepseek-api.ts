@@ -6,6 +6,7 @@ import {ChatMessage} from "@/schema/chat-message";
 import {Thinking} from "@/schema/chat-message-metadata/thinking";
 import {z} from "zod";
 
+const historyMessageCount = 4;
 
 export class DeepseekApi implements ChatApi {
     stopStream = false;
@@ -36,7 +37,7 @@ export class DeepseekApi implements ChatApi {
                 streaming: true,
             }
         })
-        //console.log(userMessage.contents[0])
+
         if (userMessage.contents[0].startsWith("/")) {
             //match /set-key <key> command
             console.log("command")
@@ -76,6 +77,14 @@ export class DeepseekApi implements ChatApi {
                 })
                 return
             }
+            const messages = [...config.session?.messages.slice(-historyMessageCount) as [], {...userMessage}] as ChatMessage[]
+            let messageForRequest = messages.map(msg => {
+                return {
+                    role: msg.role,
+                    content: msg.contents.filter(it => it.trim() !== "").join("\n") || " " // 确保内容不为空,
+                }
+            })
+            //console.log(messageForRequest)
             //send request to deepseek api
             const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
                 method: "POST",
@@ -85,9 +94,7 @@ export class DeepseekApi implements ChatApi {
                 },
                 body: JSON.stringify({
                     model: "deepseek-chat", // 或 deepseek-coder / deepseek-R1，如果 R1 有对应的 identifier
-                    messages: [
-                        {role: "user", content: userMessage.contents[0]},
-                    ],
+                    messages: messageForRequest,
                     stream: true,
                 }),
             });
@@ -122,8 +129,8 @@ export class DeepseekApi implements ChatApi {
             }
             let stop = false
             while (true) {
-                if(this.stopStream){
-                    stop=true
+                if (this.stopStream) {
+                    stop = true
                 }
                 const {done, value} = await reader.read();
                 if (done) stop = true;
@@ -137,7 +144,7 @@ export class DeepseekApi implements ChatApi {
                     if (deltaRaw === "[DONE]") {
                         stop = true
                         //console.log("stop")
-                    }else if (deltaRaw) {
+                    } else if (deltaRaw) {
                         const data = parseDataString(deltaRaw);
                         botMessage.contents[0] += data[0].choices[0].delta.content
                         updater(prev => ({...prev, messages: prev.messages.concat()}));
@@ -154,7 +161,6 @@ export class DeepseekApi implements ChatApi {
                     streaming: false,
                 }
             })
-
 
 
         }
