@@ -1,0 +1,23 @@
+@reference "../app/globals.css"; /* 引入 tailwind 导出的样式 */
+table.markdown {
+    td {
+        @apply text-center p-4 border-1 border-solid border-foreground;
+    }
+
+    th {
+        @apply text-center p-4 border-1 border-solid border-foreground;
+    }
+
+    code {
+        display: block; /* 变成块元素，默认撑满容器宽度 */
+        max-width: 100%; /* 限制最大宽度 */
+        white-space: pre-wrap; /* 保留空格并换行 */
+        word-break: break-word; /* 单词内换行 */
+    }
+
+    code  span {
+        display: block; /* 让span独占一行，宽度自然100% */
+        max-width: 100%;
+        white-space: inherit; /* 继承父元素换行规则 */
+    }
+}

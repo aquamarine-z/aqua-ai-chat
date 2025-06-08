@@ -15,6 +15,8 @@ export const zh_cn = {
         else return `正在思考 已用时 ${Math.floor(( Date.now()-startTime) / 1000)} 秒`
     },
     "chat-fragment.actions.copy":"复制",
+    "chat-fragment.actions.copy.success":"已复制内容到剪贴板",
+    "chat-fragment.actions.copy.fail":"复制失败，请检查相关权限",
     "chat-fragment.actions.retry":"重试",
     "chat-fragment.actions.good-feedback":"点赞此内容",
     "chat-fragment.actions.bad-feedback":"不喜欢此内容",
@@ -27,4 +29,8 @@ export const zh_cn = {
     "chat-session-selector.session.rename": "重命名会话",
     "chat-session-selector.session.rename.dialog.title": "重命名会话",
     "chat-session-selector.session.rename.dialog.content": "请输入会话名称",
+
+    "markdown-renderer.pre.header.copy.button": "复制代码",
+    "markdown-renderer.pre.header.copy.success": "已复制到剪贴板",
+    "markdown-renderer.pre.header.copy.fail": "复制失败，请检查相关权限",
 }

@@ -14,6 +14,7 @@ import {Suggestion} from "@/components/chat-list/suggestions";
 import {useInputStore} from "@/store/input-store";
 import 'katex/dist/katex.min.css'
 import {MarkdownRenderer} from "@/components/markdown";
+import {toast} from "sonner";
 
 export interface ChatFragmentProps {
     message: ChatMessage,
@@ -56,7 +57,17 @@ export const ChatFragment = memo(
                                 className={cn("w-full flex gap-1", props.message.role === "user" ? "flex-row-reverse" : "flex-row")}>
                                 <ChatFragmentAction
                                     trigger={
-                                        <Button disabled={props.message.streaming || false} className={"h-8 w-8"}
+                                        <Button onClick={() => {
+                                            const text = props.message.contents.join("\n");
+                                            if (navigator.clipboard && text) {
+                                                navigator.clipboard.writeText(text).then(() => {
+                                                    toast.success(language["chat-fragment.actions.copy.success"]);
+                                                }).catch(err => {
+                                                    toast.error(language["chat-fragment.actions.copy.fail"]);
+                                                });
+                                            }
+
+                                        }} disabled={props.message.streaming || false} className={"h-8 w-8"}
                                                 variant={"ghost"}>
                                             <CopyIcon/>
                                         </Button>
