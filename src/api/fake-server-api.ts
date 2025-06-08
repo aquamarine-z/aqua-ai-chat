@@ -4,9 +4,29 @@ import {ChatSession} from "@/schema/chat-session";
 import {ChatMessage} from "@/schema/chat-message";
 import {Thinking} from "@/schema/chat-message-metadata/thinking";
 
-const responseMessageContent = `你好 这是测试数据111111111111111111111111111`
+const responseMessageContent = `
+## 表格示例
+
+| 项目 | 数值 |
+|------|------|
+| A    | 100  |
+| B    | 200  |
+
+## 任务列表
+
+- [x] 已完成
+- [ ] 未完成
+
+## 数学公式
+
+这是行内公式：$a^2 + b^2 = c^2$。
+
+$$
+\\sum_{i=1}^n i = \\frac{n(n+1)}{2}
+$$
+`
 const responseThinkingContent = `你好 这是测试思考数据111111111111111111111111111`
-const deltaTime = 100 // 每个字的间隔时间，单位毫秒
+const deltaTime = 10 // 每个字的间隔时间，单位毫秒
 
 export class FakeServerApi implements ChatApi {
     stopStream = false;

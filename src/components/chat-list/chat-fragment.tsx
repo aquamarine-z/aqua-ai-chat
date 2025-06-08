@@ -1,7 +1,6 @@
 'use client'
 import {ChatMessage} from "@/schema/chat-message";
 import {memo, SetStateAction} from "react";
-import Markdown from "react-markdown";
 import {cn} from "@/lib/utils";
 import {Thinking} from "@/components/chat-list/thinking";
 import {CopyIcon, RefreshCcw} from "lucide-react";
@@ -13,6 +12,8 @@ import {ChatSession} from "@/schema/chat-session";
 import {useChatStore} from "@/store/chat-store";
 import {Suggestion} from "@/components/chat-list/suggestions";
 import {useInputStore} from "@/store/input-store";
+import 'katex/dist/katex.min.css'
+import {MarkdownRenderer} from "@/components/markdown";
 
 export interface ChatFragmentProps {
     message: ChatMessage,
@@ -26,8 +27,6 @@ export const ChatFragment = memo(
     function ChatFragment(props: ChatFragmentProps) {
         const language = useLanguageStore().language;
         const inputStore = useInputStore()
-        //const messages = useChatStore(state => state.getCurrentSession().messages)
-        //const setInputContent = useInputStore(state => state.setContent)
         const streaming = useChatStore(state => {
             return state.getCurrentSession().streaming
         })
@@ -37,14 +36,14 @@ export const ChatFragment = memo(
                     <div className={"max-w-[90%] w-fit h-full flex flex-col break-words gap-2"}>
                         {props.message.thinking && (
                             <div className={"w-full max-w-full h-fit rounded-lg px-3 py-3 break-words"}>
-                                <Thinking message={props.message}/>
+                                <Thinking message={props.message} updateMessage={props.updateMessage}/>
                             </div>
                         )}
 
                         <div
                             className={cn("w-fit h-fit max-w-full rounded-lg px-3 py-3 break-words ", props.message.role === "user" ? " bg-background" : "")}>
                             {props.message.contents.map((it, index) =>
-                                typeof it === "string" ? <Markdown key={index}>{it}</Markdown> : <></>
+                                typeof it === "string" ? <MarkdownRenderer content={it} key={index}/> : <></>
                             )}
                         </div>
                         {

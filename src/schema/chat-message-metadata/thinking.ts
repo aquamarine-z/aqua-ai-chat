@@ -4,5 +4,6 @@ export const ThinkingSchema=z.object({
     startTime:z.number(),
     finishTime:z.number().optional(),
     finished:z.boolean(),
+    open:z.boolean().default(false),
 })
 export type Thinking=z.infer<typeof ThinkingSchema>
