@@ -11,7 +11,7 @@ import {useChatListStateStore} from "@/store/chat-list-state-store";
 import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
 import {useInputStore} from "@/store/input-store";
 import {ChatMessage, defaultUserMessage} from "@/schema/chat-message";
-import {ChatConfig, getApiByModelName} from "@/api";
+import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 
 export const InputBox = forwardRef((props, ref) => {
     const languageStore = useLanguageStore()
@@ -20,53 +20,73 @@ export const InputBox = forwardRef((props, ref) => {
     const divRef = useRef<HTMLDivElement>(null);
     const isComposingRef = useRef(false);
     const chatListStateStore = useChatListStateStore();
-    const inputContent = chatStore.getCurrentSession().inputStorage.text
-    const inputStore = useInputStore()
+    const chatApiRef = useRef<ChatApi>(null)
+    const inputContent = useChatStore(state => {
+        const session = state.getCurrentSession();
+        return session.inputStorage.text
+    })
+    const streaming = useChatStore(state => {
+        return state.getCurrentSession().streaming||false
+    })
+
+    const [sendMessageButtonDisabled, setSendMessageButtonDisabled] = useState(false);
     useEffect(() => {
-        chatStore.repairCurrentSession()
-    }, []);
+        setSendMessageButtonDisabled(!streaming&& inputContent.trim() === "");
+    }, [inputContent,streaming]);
+    const inputStore = useInputStore()
     useEffect(() => {
         inputStore.updateInputStore(action => {
             action.chat = (message?: ChatMessage) => {
+                const currentSession = chatStore.getCurrentSession()
+                //console.log(currentSession.name)
+                if (currentSession.streaming) {
+                    if (chatApiRef.current) {
+                        chatApiRef.current.stop()
+                    }
+                    chatStore.updateCurrentSession(prev => {
+                        return {...prev, streaming: false}
+                    })
+                    return
+                }
                 let userMessage: ChatMessage;
                 if (message) {
-                    userMessage = message
+                    userMessage = {...message}
                 } else {
-                    userMessage = defaultUserMessage
-                    userMessage.contents = [chatStore.getCurrentSession().inputStorage.text]
+                    userMessage = {...defaultUserMessage}
+                    userMessage.contents = [currentSession.inputStorage.text]
                     chatStore.updateCurrentSession(session => {
                         session.inputStorage.text = ""
                         return session
                     })
                 }
-                chatStore.updateCurrentSession(prev => {
-                    return {...prev, messages: [...prev.messages, userMessage]}
-                })
-                const modelName = chatStore.getCurrentSession().modelConfig;
+                const modelName = currentSession.modelConfig;
                 const chatApi = getApiByModelName(modelName)
                 if (!chatApi) return;
                 const config: ChatConfig = {
-                    session: chatStore.getCurrentSession(),
+                    session: currentSession,
                     onFinish: () => {
-                        //chatListStateStore.setAutoScroll(false)
+                        chatStore.updateCurrentSession(session => {
+                            session.streaming = false;
+                            return session;
+                        })
+                        chatApiRef.current = null
                     },
+                    userMessage: userMessage,
                 }
                 chatApi.sendMessage(config, chatStore.updateCurrentSession)
+                chatApiRef.current = chatApi as ChatApi;
             }
             return action
         })
-    }, [chatStore]);
+    }, [chatStore.currentSessionIndex]);
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {
             // 如果正在进行输入法组合输入，则不修改 focus 状态
-
             setTimeout(() => {
-
                 if (isComposingRef.current) return;
                 setFocus(false);
             }, 0)
-
         };
         const handleCompositionStart = () => {
             isComposingRef.current = true;
@@ -93,11 +113,24 @@ export const InputBox = forwardRef((props, ref) => {
             }
         };
     }, []);
-    let sendMessageButtonDisabled=false
-    //console.log(!chatStore.getCurrentSession().streaming && inputContent === "")
-    if(!chatStore.getCurrentSession().streaming && inputContent === ""){
-        sendMessageButtonDisabled=true
-    }
+    useEffect(() => {
+        chatStore.repairCurrentSession()
+        return () => {
+            if (chatApiRef.current) {
+                chatApiRef.current.stop()
+                chatApiRef.current = null
+            }
+            chatStore.updateCurrentSession(session => {
+                session.streaming = false
+                return session
+            })
+            inputStore.updateInputStore(action => {
+                action.chat = undefined
+                return action
+            })
+        }
+    }, [chatStore.currentSessionIndex])
+    //console.log(inputContent)
     return <div className={"w-full h-fit px-2 flex flex-row items-center justify-center "}>
         <div
             ref={divRef}
@@ -114,10 +147,10 @@ export const InputBox = forwardRef((props, ref) => {
                 className={"w-full max-h-40 grow resize-none bg-transparent border-none shadow-none overflow-y-auto outline-0 focus:outline-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-none"}
                 onChange={e => {
                     chatStore.updateCurrentSession(session => {
-                        session.inputStorage.text = e.target.value
+                        session.inputStorage.text = e.target.value.toString()
                         return session
                     })
-                }} value={inputContent}/>
+                }} value={inputContent.toString()}/>
             <div className={"min-h-12 flex flex-row items-center px-2 gap-2"}>
                 <AttachmentUploader/>
                 <div className={"grow"}/>
@@ -135,48 +168,3 @@ export const InputBox = forwardRef((props, ref) => {
 
 
 })
-/*
-if (chatStore.getCurrentSession().streaming) {
-            chatStore.updateCurrentSession(prev => {
-                return {
-                    ...prev,
-                    streaming: false
-                }
-            })
-            if (!chatApiRef.current) {
-                return
-            }
-            chatApiRef.current.stop()
-        } else {
-            const model = chatStore.getCurrentSession().modelConfig
-            const api = getApiByModelName(model)
-
-            let userMessage = {
-                role: "user",
-                contents: [inputContent],
-            } as ChatMessage
-            if (message) {
-                userMessage = message
-            } else {
-                chatStore.updateCurrentSession(session=>{
-                    session.inputStorage.text = ""
-                    return session
-                })
-            }
-            chatStore.updateCurrentSession(prev => {
-                return {...prev, messages: [...prev.messages, userMessage]}
-            })
-            if (!api) return
-            else {
-                chatApiRef.current = api as ChatApi
-                const config: ChatConfig = {
-                    session: chatStore.getCurrentSession(),
-                    onFinish: () => {
-                        chatListStateStore.setAutoScroll(false)
-                    },
-                }
-                api.sendMessage(config, chatStore.updateCurrentSession)
-
-            }
-        }
-* */

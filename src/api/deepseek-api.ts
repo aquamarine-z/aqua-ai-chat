@@ -16,6 +16,18 @@ export class DeepseekApi implements ChatApi {
             streaming: true,
             thinking: {startTime: Date.now(), content: "", finished: false} as Thinking
         }
+
+        let userMessage = config.userMessage
+        if(!userMessage){
+            return
+        }
+        updater(prev=>{
+            return{
+                ...prev,
+                messages:[...prev.messages,userMessage],
+                streaming: true,
+            }
+        })
         updater(prev => {
             return {
                 ...prev,
@@ -24,7 +36,6 @@ export class DeepseekApi implements ChatApi {
             }
         })
         this.stopStream = false
-        const userMessage = config.session?.messages[config.session?.messages.length - 1]
         let i = 0
         let it = 0
         updater(prev => {
@@ -33,7 +44,7 @@ export class DeepseekApi implements ChatApi {
                 messages: prev.messages.concat()
             }
         })
-        let lastMessage = config.session?.messages[config.session?.messages.length - 1]
+        let lastMessage = userMessage!
         if (config.messageIndex) {
 
             lastMessage = config.session?.messages[config.messageIndex]
@@ -41,7 +52,7 @@ export class DeepseekApi implements ChatApi {
         //console.log(lastMessage)
         botMessage.thinking!.content += lastMessage.contents[0]
         botMessage.thinking!.finished = false
-       botMessage.thinking!.finishTime = Date.now()
+        botMessage.thinking!.finishTime = Date.now()
         const inter = setInterval(() => {
             botMessage.contents[0] += i
 

@@ -3,11 +3,16 @@ import {useChatStore} from "@/store/chat-store";
 import {ChatFragment} from "@/components/chat-list/chat-fragment";
 
 import {applySetStateAction} from "@/utils";
-import {useEffect, useRef} from "react";
-import {Virtuoso} from "react-virtuoso";
+import React, {useEffect, useRef} from "react";
 import styles from "./chat-list.module.css"
 import {cn} from "@/lib/utils";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
+import dynamic from "next/dynamic";
+
+const Virtuoso = dynamic(async () => {
+    const mod = await import("react-virtuoso");
+    return mod.Virtuoso;
+}, {ssr: false,loading:()=><div className={"w-full h-full py-2 grow overflow-y-auto flex items-center "}/>})
 
 export function ChatList() {
     const chatStore = useChatStore()
@@ -29,6 +34,7 @@ export function ChatList() {
             }
         })
     }, [chatStore]);
+
     return <Virtuoso followOutput={true}
                      className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center ", styles["chat-list-scroll"])}
                      data={messages}
@@ -42,6 +48,7 @@ export function ChatList() {
                          return <div className={"px-10 w-full flex items-center justify-center"}>
                              <div className={"max-w-5xl w-full"}>
                                  <ChatFragment
+                                     //@ts-ignore
                                      message={{...item, contents: [...item.contents]}} key={index}
                                      messageIndex={index}
                                      session={chatStore.getCurrentSession()}
