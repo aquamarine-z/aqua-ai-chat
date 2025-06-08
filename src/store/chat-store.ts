@@ -5,6 +5,7 @@ import {ChatSession, defaultChatSession} from "@/schema/chat-session";
 import {SetStateAction} from "react";
 import {applySetStateAction} from "@/utils";
 import {ChatMessage} from "@/schema/chat-message";
+import {ChatConfig} from "@/api";
 
 interface ChatStore {
     currentSessionIndex: number;
@@ -30,6 +31,7 @@ export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) =>
         set({...get(), sessions})
     },
     repairCurrentSession: () => {
+        //console.log(get().getCurrentSession().streaming)
         if (get().getCurrentSession().streaming) {
             get().updateCurrentSession(action => ({...action, streaming: false}))
         }

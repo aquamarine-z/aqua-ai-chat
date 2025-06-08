@@ -76,7 +76,7 @@ export class DeepseekApi implements ChatApi {
                     }
                 })
             }
-        }, 20)
+        }, 10)
 
     }
 

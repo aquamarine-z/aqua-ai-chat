@@ -1,17 +1,18 @@
-import {useInputStore} from "@/store/input-store";
 import {useSuggestionStore} from "@/store/suggestion-store";
 import {Suggestion} from "@/schema/suggestion";
 import {Button} from "@/components/ui/button";
-import {motion, AnimatePresence} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
+import {useChatStore} from "@/store/chat-store";
 
 export interface SuggestionsProps {
     open: boolean
 }
 
 export function Suggestions(props: SuggestionsProps) {
-    const inputStore = useInputStore()
+    const chatStore = useChatStore();
+    const inputStorage = chatStore.getCurrentSession().inputStorage;
     const suggestionStore = useSuggestionStore()
-    const availableSuggestions = getAvailableSuggestions(inputStore.content, suggestionStore.suggestions)
+    const availableSuggestions = getAvailableSuggestions(inputStorage.text, suggestionStore.suggestions)
     return <AnimatePresence>
         {(availableSuggestions.length > 0 && props.open) && (
             <motion.div
@@ -24,10 +25,13 @@ export function Suggestions(props: SuggestionsProps) {
             >
                 {availableSuggestions.map((it, index) => (
                     <Button
-                        onClick={()=>{
-                            inputStore.setContent(prev=>prev+it.content)
+                        onClick={() => {
+                            chatStore.updateCurrentSession(session => {
+                                session.inputStorage.text = session.inputStorage.text + it.content;
+                                return session;
+                            })
                         }}
-                        
+
                         key={index} variant="ghost" className="flex h-fit items-start flex-col w-full">
                         <span className="font-semibold text-lg">{it.name}</span>
                         <span className="font-medium text-sm text-foreground/60">{it.content}</span>
@@ -40,11 +44,11 @@ export function Suggestions(props: SuggestionsProps) {
 
 function getAvailableSuggestions(input: string, suggestions: Suggestion[]) {
     if (input.trim() === "") return []
-    if(input.startsWith("/")) return suggestions
+    if (input.startsWith("/")) return suggestions
     const result = [] as Suggestion[]
     for (const suggestion of suggestions) {
         if (suggestion.content.includes(input) || suggestion.name.includes(input)) {
-            if(suggestion.content!==input) result.push(suggestion)
+            if (suggestion.content !== input) result.push(suggestion)
         }
     }
     return result

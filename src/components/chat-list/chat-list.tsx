@@ -3,47 +3,40 @@ import {useChatStore} from "@/store/chat-store";
 import {ChatFragment} from "@/components/chat-list/chat-fragment";
 
 import {applySetStateAction} from "@/utils";
-import {useChatListStateStore} from "@/store/chat-list-state-store";
-import {useEffect} from "react";
-import {useInputBoxStateStore} from "@/store/input-box-state-store";
+import {useEffect, useRef} from "react";
 import {Virtuoso} from "react-virtuoso";
 import styles from "./chat-list.module.css"
 import {cn} from "@/lib/utils";
+import {useChatListStateStore} from "@/store/chat-list-state-store";
+
 export function ChatList() {
     const chatStore = useChatStore()
-    const chatListStateStore = useChatListStateStore()
-    const inputBoxStateStore = useInputBoxStateStore();
-    useEffect(() => {
-        chatListStateStore.setAtBottom(true)
-        window.scrollTo({top: document.body.scrollHeight, behavior: "auto"})
-    }, [chatStore.currentSessionIndex])
     useEffect(() => {
         chatStore.repairCurrentSession()
     }, [chatStore.currentSessionIndex]);
-    useEffect(() => {
-        //console.log(chatListStateStore.autoScroll)
-        if (chatListStateStore.autoScroll) {
-            chatListStateStore.scrollToBottom();
-        }
-    }, [chatStore, chatListStateStore.autoScroll]);
-    const checkWindowBottom = () => {
-        const isBottom = Math.ceil(window.scrollY + window.innerHeight) >= document.body.scrollHeight;
-        if (isBottom) {
-            chatListStateStore.setAtBottom(true)
-        } else chatListStateStore.setAtBottom(false)
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', checkWindowBottom);
-        return () => window.removeEventListener('scroll', checkWindowBottom);
-    }, []);
-    useEffect(() => {
-    }, [chatStore.currentSessionIndex]);
+    const chatListStateStore = useChatListStateStore()
     const messages = chatStore.getCurrentSession().messages
-    return <Virtuoso followOutput={true} className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center ",styles["chat-list-scroll"])}
+    const virtuosoRef = useRef(null)
+    useEffect(() => {
+        chatListStateStore.setScrollToBottom(() => {
+            if (virtuosoRef.current) {
+                //@ts-ignore
+                virtuosoRef.current?.scrollToIndex({
+                    index: Number.MAX_SAFE_INTEGER,
+                    align: 'end', // 可选: 'start' | 'center' | 'end'
+                    behavior: 'smooth', // 可选: 'auto' | 'smooth'
+                })
+            }
+        })
+    }, [chatStore]);
+    return <Virtuoso followOutput={true}
+                     className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center ", styles["chat-list-scroll"])}
                      data={messages}
-                     overscan={500}
-
+                     overscan={250}
+                     atBottomStateChange={(atBottom) => {
+                         chatListStateStore.setAtBottom(atBottom)
+                     }}
+                     ref={virtuosoRef}
                      initialTopMostItemIndex={messages.length - 1}
                      itemContent={(index, item) => {
                          return <div className={"px-10 w-full flex items-center justify-center"}>
@@ -55,7 +48,6 @@ export function ChatList() {
 
                                      updateMessage={(action) => {
                                          const newMessage = applySetStateAction(item, action)
-
                                          chatStore.updateCurrentSession(prev => {
                                              const messages = prev.messages
                                              messages[index] = newMessage

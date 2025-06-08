@@ -10,9 +10,9 @@ import {ChatFragmentAction} from "@/components/chat-list/chat-fragment-action";
 import {useLanguageStore} from "@/store/language-store";
 import {isEqual} from "lodash";
 import {ChatSession} from "@/schema/chat-session";
-import {useInputBoxStateStore} from "@/store/input-box-state-store";
 import {useChatStore} from "@/store/chat-store";
 import {Suggestion} from "@/components/chat-list/suggestions";
+import {useInputStore} from "@/store/input-store";
 
 export interface ChatFragmentProps {
     message: ChatMessage,
@@ -25,9 +25,9 @@ export interface ChatFragmentProps {
 export const ChatFragment = memo(
     function ChatFragment(props: ChatFragmentProps) {
         const language = useLanguageStore().language;
+        const inputStore=useInputStore()
         //const messages = useChatStore(state => state.getCurrentSession().messages)
         //const setInputContent = useInputStore(state => state.setContent)
-        const inputBoxState = useInputBoxStateStore()
         const streaming = useChatStore(state => {
             return state.getCurrentSession().streaming
         })
@@ -72,7 +72,7 @@ export const ChatFragment = memo(
                                                 onClick={() => {
                                                     //get the last user message
                                                     const lastUserMessage= props.session.messages.reverse().find(it => it.role === "user")
-                                                    inputBoxState?.inputBoxRef?.current?.chat?.(lastUserMessage)
+                                                    inputStore.chat?.(lastUserMessage as ChatMessage)
                                                 }}>
                                             <RefreshCcw/>
                                         </Button>
