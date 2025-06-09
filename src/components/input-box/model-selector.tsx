@@ -14,6 +14,7 @@ export function ModelSelector() {
     useEffect(() => {
         setModelName(chatStore.getCurrentSession().modelConfig.name)
     }, []);
+    
     return <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild >
             <Button variant={"ghost"}
@@ -21,7 +22,7 @@ export function ModelSelector() {
                 <span className={"grow text-center text-sm sm:text-md"}>
                     {modelName}
                 </span>
-                <ChevronUp className={"transition stroke-foreground/60 " + (open ? "rotate-180" : "")}/>
+                <ChevronUp className={"transition stroke-foreground/60" + (open ? "rotate-180" : "")}/>
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side={"bottom"} className={"w-56 h-32"}>

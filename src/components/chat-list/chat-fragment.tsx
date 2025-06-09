@@ -22,8 +22,6 @@ export interface ChatFragmentProps {
     messageIndex: number,
     updateMessage?: (action: SetStateAction<ChatMessage>) => void,
 }
-
-// 🔥 使用 memo 优化组件
 export const ChatFragment = memo(
     function ChatFragment(props: ChatFragmentProps) {
         const language = useLanguageStore().language;
@@ -103,7 +101,6 @@ export const ChatFragment = memo(
         return isEqual(prevProps.message, nextProps.message)
     }
 );
-
 function DotsLoading() {
     return (
         <svg width="50" height="20" viewBox="0 0 50 20" className={"fill-foreground py-1 px-0"}>
