@@ -12,7 +12,7 @@ export function PageHeader() {
     const language = useLanguageStore().language
 
     return <div
-        className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-electric-violet-50 via-electric-violet-50 via-80% to-transparent z-40"}>
+        className={"w-full h-12 sticky top-0 left-0 bg-gradient-to-b from-neutral-100 via-neutral-100 via-80% to-transparent z-40 dark:from-neutral-800 dark:via-neutral-800"}>
         <div className={"w-full h-full flex flex-row px-4 items-center"}>
             
             <Button className={"h-2/3 w-fit hidden sm:flex items-center text-sm flex-row gap-2"} variant={"ghost"}
@@ -25,7 +25,7 @@ export function PageHeader() {
                             }
                         })
                     }}>
-                <Image src={LogoBlack} alt={""} className={"w-6 h-6 "}/>
+                <Image src={LogoBlack} alt={""} className={"w-6 h-6 dark:invert"}/>
                 <p className={"text-sm flex items-center justify-center"}>{language["page-header.title"]}</p>
             </Button>
             <div className={"grow"}/>

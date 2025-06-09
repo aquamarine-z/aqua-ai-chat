@@ -71,12 +71,17 @@ export const MarkdownRenderer = (props: { content: string }) => {
                              pre: Pre,
                              code: Code,
                              ul: ({node, ...props}) => {
-                                 return <ul {...props} className={cn("list-disc list-inside pl-4 my-0.5", styles["markdown"])}/>
+                                 return <ul {...props}
+                                            className={cn("list-disc  list-inside pl-4 my-0.5", styles["markdown"])}/>
                              },
                              ol: ({node, ...props}) => {
-                                 return <ol {...props} className={cn("list-decimal list-inside pl-4 my-0.5", styles["markdown"])}/>
+                                 return <ol {...props}
+                                            className={cn("list-decimal list-inside pl-4 my-0.5", styles["markdown"])}/>
                              },
-
+                             p: ({node, ...props}) => {
+                                 return <p {...props} className={cn("inline", styles["markdown"])}
+                                           dir={"auto"}/>
+                             }
                          }
                      }
     >{props.content}</Markdown>
@@ -84,7 +89,7 @@ export const MarkdownRenderer = (props: { content: string }) => {
 const Pre: Components["pre"] = ({node, className, children, ...props}) => {
     const language = useLanguageStore().language
     // 如果父节点是 <pre>，说明这是 block code
-    return <div className={"bg-background border-1 border-foreground/30 rounded-sm my-4 flex flex-col pb-2"}>
+    return <div className={"bg-background  border-1 border-foreground/30 rounded-sm my-4 flex flex-col pb-2"}>
         <div className={"w-full h-10 flex flex-row border-b-1 border-foreground/30 my-2 pb-2 px-2 items-center"}>
             <div className={"grow"}/>
             <Button onClick={() => {
@@ -100,13 +105,13 @@ const Pre: Components["pre"] = ({node, className, children, ...props}) => {
             }} className={"h-8 py-2 rounded-sm"}
                     variant={"ghost"}><CopyIcon/>{language["markdown-renderer.pre.header.copy.button"]}</Button>
         </div>
-        <pre className={"mx-4"}>{children}</pre>
+        <pre className={"mx-4 overflow-x-auto"}>{children}</pre>
     </div>
 
 }
 const Code: Components["code"] = ({node, className, children, ...props}) => {
     return <code
-        className={cn("max-w-full overflow-x-scroll", className)} {...props}>{children}</code>
+        className={cn("max-w-full overflow-x-auto", className)} {...props}>{children}</code>
 }
 /*
 import ReactMarkdown from "react-markdown";

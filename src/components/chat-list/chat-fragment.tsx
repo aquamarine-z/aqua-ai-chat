@@ -40,7 +40,7 @@ export const ChatFragment = memo(
                         )}
 
                         <div
-                            className={cn("w-fit h-fit max-w-full rounded-lg px-3 py-3 break-words ", props.message.role === "user" ? " bg-background" : "")}>
+                            className={cn("w-fit h-fit max-w-full rounded-lg px-3 py-3 break-words ", props.message.role === "user" ? " bg-background border-foreground/10 border-[1px]" : "")}>
                             {props.message.contents.map((it, index) =>
                                 typeof it === "string" ? <MarkdownRenderer content={it} key={index}/> : <></>
                             )}

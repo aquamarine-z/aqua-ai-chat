@@ -10,11 +10,11 @@ export default function ChatPageLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className={"w-screen h-screen"}>
+        <div data-theme="dark" className={"w-screen h-screen"}>
             <SidebarProvider>
                 <AppSidebar/>
                 <div
-                    className={"w-full h-full max-h-screen overflow-hidden flex flex-col items-center justify-start pb-2 bg-electric-violet-50"}>
+                    className={"w-full h-full max-h-screen overflow-hidden flex flex-col items-center justify-start pb-2 bg-neutral-100 dark:bg-neutral-800"}>
                     <PageHeader/>
                     {children}
                 </div>
