@@ -135,7 +135,7 @@ export const InputBox = forwardRef((props, ref) => {
     return <div className={"w-full h-fit px-4 pb-3 flex flex-row items-center justify-center "}>
         <div
             ref={divRef}
-            className="transition-all relative w-full h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 min-h-fit  px-2 max-w-5xl ">
+            className="transition-all relative w-full h-fit max-h-[60vh] border-[1px] border-foreground/10 rounded-2xl bg-background flex flex-col py-2 min-h-fit  px-2 max-w-5xl  ">
             {!chatListStateStore.isAtBottom &&
                 <Button variant={"outline"} className={"w-10 h-10 rounded-full absolute -top-11 -right-0 "}
                         onClick={() => {
