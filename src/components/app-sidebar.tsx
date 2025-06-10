@@ -1,11 +1,12 @@
-import {Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader,} from "@/components/ui/sidebar"
+import {Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, useSidebar,} from "@/components/ui/sidebar"
 import {ThemeToggle} from "@/components/theme-toggle";
 import {useAppInformationStore} from "@/store/app-information-store";
 
 export function AppSidebar() {
     const appInformation = useAppInformationStore()
+
     return (
-        <Sidebar>
+        <Sidebar >
             <SidebarHeader/>
             <SidebarContent>
                 <SidebarGroup/>

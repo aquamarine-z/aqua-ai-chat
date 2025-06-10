@@ -33,7 +33,7 @@ export function SessionSelector() {
 function SessionSelectorPc(props: SessionSelectorProps) {
     return <Dialog open={props.open} onOpenChange={(v) => props.setOpen(v)}>
         {props.trigger}
-        <DialogContent className={"max-w-[600px] w-[600px] h-[600px]"}>
+        <DialogContent className={"max-w-[600px] w-[600px] h-[600px] p-0 flex flex-col"}>
             <SessionSelectorContent {...props}/>
         </DialogContent>
     </Dialog>

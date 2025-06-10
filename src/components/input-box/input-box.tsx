@@ -21,18 +21,20 @@ export const InputBox = forwardRef((props, ref) => {
     const isComposingRef = useRef(false);
     const chatListStateStore = useChatListStateStore();
     const chatApiRef = useRef<ChatApi>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const sendMessageButtonRef = useRef<HTMLButtonElement>(null);
     const inputContent = useChatStore(state => {
         const session = state.getCurrentSession();
         return session.inputStorage.text
     })
     const streaming = useChatStore(state => {
-        return state.getCurrentSession().streaming||false
+        return state.getCurrentSession().streaming || false
     })
 
     const [sendMessageButtonDisabled, setSendMessageButtonDisabled] = useState(false);
     useEffect(() => {
-        setSendMessageButtonDisabled(!streaming&& inputContent.trim() === "");
-    }, [inputContent,streaming]);
+        setSendMessageButtonDisabled(!streaming && inputContent.trim() === "");
+    }, [inputContent, streaming]);
     const inputStore = useInputStore()
     useEffect(() => {
         inputStore.updateInputStore(action => {
@@ -143,20 +145,30 @@ export const InputBox = forwardRef((props, ref) => {
                         }}><ChevronDown/> </Button>}
             <Suggestions open={focus}/>
 
-            <Textarea
-                placeholder={languageStore.language["input-box.input.placeholder"]}
-                className={"w-full max-h-40 grow resize-none bg-transparent border-none shadow-none overflow-y-auto outline-0 focus:outline-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-none"}
-                onChange={e => {
-                    chatStore.updateCurrentSession(session => {
-                        session.inputStorage.text = e.target.value.toString()
-                        return session
-                    })
-                }} value={inputContent.toString()}/>
+            <Textarea ref={textareaRef}
+                      onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey&& !e.nativeEvent.isComposing) {
+                              e.preventDefault(); // 阻止默认的换行行为
+                              if (!sendMessageButtonDisabled) {
+                                  sendMessageButtonRef.current?.click()
+                              }
+                          }
+                          // Shift+Enter 会保持默认行为（换行）
+                      }
+                      }
+                      placeholder={languageStore.language["input-box.input.placeholder"]}
+                      className={"w-full max-h-40 grow resize-none bg-transparent border-none shadow-none overflow-y-auto outline-0 focus:outline-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-none"}
+                      onChange={e => {
+                          chatStore.updateCurrentSession(session => {
+                              session.inputStorage.text = e.target.value.toString()
+                              return session
+                          })
+                      }} value={inputContent.toString()}/>
             <div className={"min-h-12 flex flex-row items-center px-2 gap-2"}>
                 <AttachmentUploader/>
                 <div className={"grow"}/>
                 <ModelSelector/>
-                <Button onClick={() => {
+                <Button ref={sendMessageButtonRef} onClick={() => {
                     inputStore.chat?.()
                 }} className={"rounded-full h-7 w-7 sm:h-10 sm:w-10 hover:cursor-pointer"}
                         disabled={sendMessageButtonDisabled}>
