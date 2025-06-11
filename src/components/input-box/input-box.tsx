@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {useLanguageStore} from "@/store/language-store";
 import {ModelSelector} from "@/components/input-box/model-selector";
 import {Suggestions} from "@/components/input-box/suggesions";
-import {forwardRef, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useChatStore} from "@/store/chat-store";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
 import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
@@ -13,7 +13,8 @@ import {useInputStore} from "@/store/input-store";
 import {ChatMessage, defaultUserMessage} from "@/schema/chat-message";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 
-export const InputBox = forwardRef((props, ref) => {
+
+export const InputBox = () => {
     const languageStore = useLanguageStore()
     const chatStore = useChatStore()
     const [focus, setFocus] = useState(false);
@@ -180,4 +181,4 @@ export const InputBox = forwardRef((props, ref) => {
     </div>
 
 
-})
+}

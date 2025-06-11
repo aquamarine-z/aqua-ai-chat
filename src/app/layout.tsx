@@ -1,10 +1,11 @@
 'use client'
-import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import {Toaster} from "@/components/ui/sonner"
 import {ThemeProvider} from "@/components/theme-provider";
-import React from "react";
+import React, {useEffect} from "react";
+import {useLanguageSettingsStore} from "@/store/language-settings-store";
+import {useLanguageStore} from "@/store/language-store";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -22,6 +23,12 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const languageStore = useLanguageStore();
+    const languageSettingStore = useLanguageSettingsStore()
+    useEffect(() => {
+        languageStore.setLanguageByName(languageSettingStore.languageName)
+        //console.log(languageSettingStore.languageName)
+    }, [languageSettingStore.languageName]);
     return (
         <html lang="en">
             <body

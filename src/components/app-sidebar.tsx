@@ -17,9 +17,6 @@ export function AppSidebar() {
     const pathname = usePathname()
     const router = useRouter()
     const language = useLanguageStore().language
-    useEffect(() => {
-        console.log(pathname)
-    }, []);
     return (
         <Sidebar className={"w-64"}>
             <SidebarHeader className={"flex flex-col items-center justify-start"}>

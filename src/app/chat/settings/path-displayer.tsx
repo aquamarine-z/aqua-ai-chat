@@ -2,6 +2,9 @@
 
 import {usePathname} from "next/navigation";
 import {useLanguageStore} from "@/store/language-store";
+import {SidebarTrigger} from "@/components/ui/sidebar";
+import {Button} from "@/components/ui/button";
+import { ChevronLeftIcon} from "lucide-react";
 
 export function PathDisplayer() {
     const pathname = usePathname().replace("/chat/", "")
@@ -21,10 +24,18 @@ export function PathDisplayer() {
                 return language["settings.AI-Models.label"]
         }
     })
-    return <div className={"w-full h-12 flex flex-row px-4 items-center justify-start text-sm border-b-[1px] border-foreground/30 select-none"}>
+    return <div className={"w-full min-h-12 h-12 flex flex-row px-4 items-center justify-start text-sm border-b-[1px] border-foreground/30 select-none gap-8"}>
+        <SidebarTrigger className={"sm:hidden w-6 h-6 "} variant={"ghost"}/>
+
+        {!(translatedParts.length === 1&&translatedParts[0]===undefined)&&<Button className={"h-8 w-fit flex flex-row items-center justify-start gap-2"} variant={"ghost"}
+                 onClick={() => {
+                     window.history.back();
+                 }}>
+            <ChevronLeftIcon className={"size-6"}/>
+        </Button>}
         {translatedParts.length === 1&&translatedParts[0]===undefined ?
             <p className={"text-sm text-neutral-500"}>{language["settings.settings.label"]}</p> :
-            <p className={"text-sm text-neutral-500"}>{translatedParts.join(" > ")}</p>
+            <p className={"text-sm text-neutral-500"}>{language["settings.settings.label"]} {" > "} {translatedParts.slice(1,translatedParts.length).join(" > ")}</p>
         }
     </div>
 }

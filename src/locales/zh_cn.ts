@@ -49,6 +49,12 @@ export const zh_cn = {
     "settings.general.theme.label": "主题",
     "settings.general.general.label": "通用",
     "settings.AI-Models.label": "AI 模型",
+    
+    "settings.general.language.title": "语言设置",
+    "settings.general.language.app-language": "语言",
+    "settings.general.language.app-language.set.success": "语言更换成功",
+    "settings.general.language.app-language.set.fail": "语言更换失败",
+    "settings.general.language.use-language-as-system-prompt":"将使用语言作为系统提示词传入大模型",
 
 
 }

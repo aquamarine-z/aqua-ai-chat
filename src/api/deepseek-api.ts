@@ -1,5 +1,5 @@
 'use client'
-import {ChatApi, ChatConfig} from "@/api/index";
+import {ChatApi, ChatConfig, generateSystemMessage} from "@/api/index";
 import {SetStateAction} from "react";
 import {ChatSession} from "@/schema/chat-session";
 import {ChatMessage} from "@/schema/chat-message";
@@ -19,7 +19,7 @@ export class DeepseekApi implements ChatApi {
             thinking: {startTime: Date.now(), content: "", finished: false} as Thinking
         }
 
-        let userMessage = config.userMessage
+        const userMessage = config.userMessage
         if (!userMessage) {
             return
         }
@@ -37,7 +37,7 @@ export class DeepseekApi implements ChatApi {
                 streaming: true,
             }
         })
-
+        
         if (userMessage.contents[0].startsWith("/")) {
             //match /set-key <key> command
             console.log("command")
@@ -77,13 +77,15 @@ export class DeepseekApi implements ChatApi {
                 })
                 return
             }
-            const messages = [...config.session?.messages.slice(-historyMessageCount) as [], {...userMessage}] as ChatMessage[]
-            let messageForRequest = messages.map(msg => {
+            const systemMessages=generateSystemMessage() as ChatMessage[]
+            const messages = [...systemMessages,...config.session?.messages.slice(-historyMessageCount) as [], {...userMessage}] as ChatMessage[]
+            const messageForRequest = messages.map(msg => {
                 return {
                     role: msg.role,
                     content: msg.contents.filter(it => it.trim() !== "").join("\n") || " " // 确保内容不为空,
                 }
             })
+            
             //console.log(messageForRequest)
             //send request to deepseek api
             const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
