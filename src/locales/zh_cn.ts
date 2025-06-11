@@ -42,6 +42,12 @@ export const zh_cn = {
     "sidebar.navigator.presets": "预设",
 
     "sidebar.chat-list.title": "聊天列表",
+    "sidebar.chat-list.item.context-menu.rename": "更改对话名称",
+    "sidebar.chat-list.item.context-menu.settings": "打开设置菜单",
+    "sidebar.chat-list.item.context-menu.delete": "删除此对话",
+
+    "sidebar.chat-list.item.context-menu.rename.dialog.placeholder": "请为对话重新命名",
+    "sidebar.chat-list.item.context-menu.delete.dialog.message": "确定要将此对话删除吗?",
 
     "settings.settings.label": "设置",
     "settings.general.label": "总览",
@@ -49,12 +55,16 @@ export const zh_cn = {
     "settings.general.theme.label": "主题",
     "settings.general.general.label": "通用",
     "settings.AI-Models.label": "AI 模型",
-    
+    "settings.AI-Models.deepseek": "Deepseek",
+    "settings.AI-Models.deepseek.r1.title": "Deepseek R1",
+    "settings.AI-Models.url": "URL路径",
+    "settings.AI-Models.key": "API Key",
+
     "settings.general.language.title": "语言设置",
     "settings.general.language.app-language": "语言",
     "settings.general.language.app-language.set.success": "语言更换成功",
     "settings.general.language.app-language.set.fail": "语言更换失败",
-    "settings.general.language.use-language-as-system-prompt":"将使用语言作为系统提示词传入大模型",
+    "settings.general.language.use-language-as-system-prompt": "将使用语言作为系统提示词传入大模型",
 
 
 }

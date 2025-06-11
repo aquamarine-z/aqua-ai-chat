@@ -20,8 +20,10 @@ export function PathDisplayer() {
                 return language["settings.general.language.label"]
             case 'theme-settings':
                 return language["settings.general.theme.label"]
-            case 'AI-models':
+            case 'ai-model':
                 return language["settings.AI-Models.label"]
+            default:
+                return part
         }
     })
     return <div className={"w-full min-h-12 h-12 flex flex-row px-4 items-center justify-start text-sm border-b-[1px] border-foreground/30 select-none gap-8"}>

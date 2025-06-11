@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
     /* config options here */
     webpack(config, options) {
         // 找到默认的处理svg的规则，并排除 .svg 文件
-        const fileLoaderRule = config.module.rules.find(rule => rule.test?.test?.('.svg'));
+        const fileLoaderRule = config.module.rules.find((rule: {
+            test: { test: (arg0: string) => any; };
+        }) => rule.test?.test?.('.svg'));
         if (fileLoaderRule) {
             fileLoaderRule.exclude = /\.svg$/i;
         }

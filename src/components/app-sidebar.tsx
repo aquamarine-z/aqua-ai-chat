@@ -6,11 +6,11 @@ import Image from "next/image";
 import {Button} from "./ui/button";
 
 import {cn} from "@/lib/utils";
-import {useEffect} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {useLanguageStore} from "@/store/language-store";
 import {SaveIcon, SettingsIcon} from "lucide-react";
 import {useChatStore} from "@/store/chat-store";
+import {ChatSession} from "@/schema/chat-session";
 
 export function AppSidebar() {
     const appInformation = useAppInformationStore()
@@ -25,7 +25,7 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent className={"w-full grow flex flex-col items-center justify-start"}>
                 <SidebarGroup className={"w-full h-fit px-4 "}>
-                    <Button variant={pathname === "/chat/settings" ? undefined : "ghost"}
+                    <Button variant={pathname.includes("/chat/settings") ? undefined : "ghost"}
                             className={cn(" w-full h-12 flex flex-row items-center ")}
                             onClick={() => {
                                 router.push("/chat/settings");
@@ -57,33 +57,42 @@ export function AppSidebar() {
 }
 
 function ChatSessionList() {
-    const pathname = usePathname()
     const language = useLanguageStore().language
     const chatStore = useChatStore()
-    const router = useRouter()
     return <SidebarContent className={"w-full h-fit px-4 flex flex-col items-center justify-start grow my-10"}>
         <h1 className={"text-foreground/70"}>{language["sidebar.chat-list.title"]}</h1>
         <div className={"w-full grow overflow-hidden rounded-xl border-[1px] border-foreground/20  drop-shadow-2xl "}>
             <div
                 className={"w-full h-full overflow-y-auto p-2 flex flex-col items-center justify-start rounded-xl "}>
                 {chatStore.sessions.map((session, index) => {
-                    return <Button className={"w-full h-12 text-lg"} onClick={() => {
-                        chatStore.setChatStore(prev => {
-                            return {
-                                ...prev,
-                                currentSessionIndex: index,
-                            }
-                        })
-                        if (pathname !== "/chat/sessions") {
-                            router.push("/chat/sessions");
-                        }
-                    }} key={index}
-                                   variant={(pathname === "/chat/sessions" && chatStore.currentSessionIndex === index) ? "default" : "ghost"}>
-                        {session.name}
-                    </Button>
+                    return <ChatSessionListItem key={index} session={session} index={index}/>
                 })}
             </div>
         </div>
 
     </SidebarContent>
+}
+
+function ChatSessionListItem({session, index}: { session: ChatSession, index: number }) {
+    const pathname = usePathname()
+    const chatStore = useChatStore()
+    const router = useRouter()
+    return <>
+        <Button className={"w-full h-12 text-lg"} onClick={() => {
+            chatStore.setChatStore(prev => {
+                return {
+                    ...prev,
+                    currentSessionIndex: index,
+                }
+            })
+            if (pathname !== "/chat/sessions") {
+                router.push("/chat/sessions");
+            }
+        }} key={index}
+                variant={(pathname === "/chat/sessions" && chatStore.currentSessionIndex === index) ? "default" : "ghost"}>
+            {session.name}
+        </Button>
+    </>
+
+
 }

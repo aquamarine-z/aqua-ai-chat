@@ -15,7 +15,7 @@ export default function SettingsLayout({
 
             <PathDisplayer/>
         <div className={"w-full grow flex flex-col items-center justify-center overflow-y-auto"}>
-            <div className={"w-full max-w-5xl grow flex flex-col px-4 py-4 gap-20 "}>
+            <div className={"w-full max-w-5xl grow flex flex-col px-4 py-4 gap-4"}>
         {children}
             </div>
         </div>
