@@ -37,4 +37,18 @@ export const zh_cn = {
     "theme.toggle.to-light": "切换到浅色主题",
     "theme.toggle.to-dark": "切换到深色主题",
     "theme.toggle.to-system": "切换到系统主题",
+
+    "sidebar.navigator.settings": "设置",
+    "sidebar.navigator.presets": "预设",
+
+    "sidebar.chat-list.title": "聊天列表",
+
+    "settings.settings.label": "设置",
+    "settings.general.label": "总览",
+    "settings.general.language.label": "语言",
+    "settings.general.theme.label": "主题",
+    "settings.general.general.label": "通用",
+    "settings.AI-Models.label": "AI 模型",
+
+
 }
