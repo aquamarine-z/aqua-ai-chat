@@ -9,7 +9,7 @@ type ApiKeyData = {
 type ApiKeyStore = {
     keys: Record<string, ApiKeyData>;
     getKey: (name: string) => ApiKeyData | undefined;
-    setKey: (name: string, url: string, key: string) => void;
+    setKey: (name: string, data: ApiKeyData) => void;
     clearKeys: () => void;
     removeKey: (name: string) => void;
 };
@@ -17,17 +17,22 @@ type ApiKeyStore = {
 export const useApiKeyStore = create<ApiKeyStore>()(
     persist(
         (set, get) => ({
-            keys: {},
+            keys: {
+                "Deepseek R1": {
+                    url: "https://api.deepseek.com/v1/chat/completions",
+                    key: "",
+                },
+            },
 
             getKey: (name: string) => {
                 return get().keys[name];
             },
 
-            setKey: (name: string, url: string, key: string) => {
+            setKey: (name: string, data: ApiKeyData) => {
                 set((state) => ({
                     keys: {
                         ...state.keys,
-                        [name]: {url, key},
+                        [name]: data,
                     },
                 }));
             },

@@ -5,12 +5,12 @@ import {ChatSession} from "@/schema/chat-session";
 import {ChatMessage} from "@/schema/chat-message";
 import {Thinking} from "@/schema/chat-message-metadata/thinking";
 import {z} from "zod";
+import {useApiKeyStore} from "@/store/api-key-store";
 
 const historyMessageCount = 4;
 
 export class DeepseekApi implements ChatApi {
     stopStream = false;
-
     async sendMessage(config: ChatConfig, updater: (action: SetStateAction<ChatSession>) => void) {
         const botMessage: ChatMessage = {
             role: "assistant",
@@ -61,9 +61,14 @@ export class DeepseekApi implements ChatApi {
                 return
             }
         } else {
+            const apiInformation = useApiKeyStore.getState().getKey("Deepseek R1") || {
+                url: "",
+                key: "",
+            }
+            
             botMessage.thinking = undefined
-            const key = localStorage.getItem("deepseek-key")
-            if (!key) {
+            const key = apiInformation.key
+            if (!key || key.trim() === "") {
                 botMessage.contents[0] = "Please set your DeepSeek API key using /set-key <key> command"
                 botMessage.streaming = false
                 botMessage.thinking = undefined
@@ -88,7 +93,7 @@ export class DeepseekApi implements ChatApi {
             
             //console.log(messageForRequest)
             //send request to deepseek api
-            const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+            const response = await fetch(apiInformation.url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

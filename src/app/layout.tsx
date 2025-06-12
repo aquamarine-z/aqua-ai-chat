@@ -40,7 +40,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Toaster position={"top-center"} visibleToasts={2} duration={500} mobileOffset={{top:"12vh"}} />
+                    <Toaster position={"top-center"} visibleToasts={2} duration={500} mobileOffset={{top: "12vh"}}/>
                     {children}
                 </ThemeProvider>
 

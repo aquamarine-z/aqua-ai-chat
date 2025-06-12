@@ -4,6 +4,7 @@ import {useLanguageStore} from "@/store/language-store";
 import {Button} from "@/components/ui/button";
 import {ChevronRightIcon, GlobeIcon, MenuIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
+import {DeepSeek} from "@lobehub/icons";
 
 export default function SettingsPage() {
     const language = useLanguageStore().language
@@ -49,8 +50,8 @@ export default function SettingsPage() {
                             router.push("settings/ai-model/deepseek")
                         }}
                 >
-                    <MenuIcon className={"size-8"}/>
-                    <span className={"text-xl"}>{language["settings.AI-Models.label"]}</span>
+                    <DeepSeek.Color className={"size-8"}/>
+                    <span className={"text-xl"}>{language["settings.AI-Models.deepseek"]}</span>
                     <div className={"grow"}/>
                     <ChevronRightIcon className={"size-8"}/>
                 </Button>

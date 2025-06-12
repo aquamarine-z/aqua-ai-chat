@@ -1,6 +1,9 @@
 export const zh_cn = {
     "confirm": "确定",
     "cancel": "取消",
+    "copy.success": "已成功复制到剪贴板",
+    "copy.fail": "复制到剪贴板失败，请检查相关权限",
+    
     "page-header.title": "Aqua AI Chat",
 
     "input-box.input.placeholder": "请输入你的问题 (Enter 发送，Shift+Enter 换行)",
@@ -49,6 +52,7 @@ export const zh_cn = {
     "sidebar.chat-list.item.context-menu.rename.dialog.placeholder": "请为对话重新命名",
     "sidebar.chat-list.item.context-menu.delete.dialog.message": "确定要将此对话删除吗?",
 
+
     "settings.settings.label": "设置",
     "settings.general.label": "总览",
     "settings.general.language.label": "语言",
@@ -59,6 +63,9 @@ export const zh_cn = {
     "settings.AI-Models.deepseek.r1.title": "Deepseek R1",
     "settings.AI-Models.url": "URL路径",
     "settings.AI-Models.key": "API Key",
+    "settings.AI-Models.save": "保存",
+    "settings.AI-Models.give-up": "放弃保存",
+    "settings.AI-Models.save.success":"保存成功",
 
     "settings.general.language.title": "语言设置",
     "settings.general.language.app-language": "语言",
