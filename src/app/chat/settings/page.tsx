@@ -2,7 +2,7 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useLanguageStore} from "@/store/language-store";
 import {Button} from "@/components/ui/button";
-import {ChevronRightIcon, GlobeIcon, MenuIcon} from "lucide-react";
+import {ChevronRightIcon, GlobeIcon, MenuIcon, MessageSquareIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
 import {DeepSeek} from "@lobehub/icons";
 
@@ -34,6 +34,17 @@ export default function SettingsPage() {
                 >
                     <GlobeIcon className={"size-8"}/>
                     <span className={"text-xl"}>{language["settings.general.language.label"]}</span>
+                    <div className={"grow"}/>
+                    <ChevronRightIcon className={"size-8"}/>
+                </Button>
+                <Button variant={"ghost"}
+                        className={"w-full h-12 flex-row items-center justify-start py-2 px-4 gap-8"}
+                        onClick={() => {
+                            router.push("settings/general/session-settings")
+                        }}
+                >
+                    <MessageSquareIcon className={"size-8"}/>
+                    <span className={"text-xl"}>{language["settings.general.session.label"]}</span>
                     <div className={"grow"}/>
                     <ChevronRightIcon className={"size-8"}/>
                 </Button>

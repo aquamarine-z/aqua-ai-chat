@@ -58,6 +58,7 @@ export const zh_cn = {
     "settings.general.language.label": "语言",
     "settings.general.theme.label": "主题",
     "settings.general.general.label": "通用",
+    "settings.general.session.label": "会话",
     "settings.AI-Models.label": "AI 模型",
     "settings.AI-Models.deepseek": "Deepseek",
     "settings.AI-Models.deepseek.r1.title": "Deepseek R1",
@@ -72,6 +73,9 @@ export const zh_cn = {
     "settings.general.language.app-language.set.success": "语言更换成功",
     "settings.general.language.app-language.set.fail": "语言更换失败",
     "settings.general.language.use-language-as-system-prompt": "将使用语言作为系统提示词传入大模型",
+
+    "settings.general.session.common": "常规设置",
+    "settings.general.session.common.auto-generate-title":"根据问题自动总结对话标题"
 
 
 }

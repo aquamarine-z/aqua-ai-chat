@@ -29,6 +29,12 @@ const responseThinkingContent = `你好 这是测试思考数据1111111111111111
 const deltaTime = 10 // 每个字的间隔时间，单位毫秒
 
 export class FakeServerApi implements ChatApi {
+    query(message:ChatMessage[]):Promise<string>{
+        console.log(message)
+        return new Promise<string>((resolve, reject)=>{
+            resolve("null")
+        })
+    }
     stopStream = false;
 
     sendMessage(config: ChatConfig, updater: (action: React.SetStateAction<ChatSession>) => void): void {

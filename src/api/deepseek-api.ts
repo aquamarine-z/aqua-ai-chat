@@ -10,6 +10,36 @@ import {useApiKeyStore} from "@/store/api-key-store";
 const historyMessageCount = 4;
 
 export class DeepseekApi implements ChatApi {
+    async query(messages: ChatMessage[]): Promise<string> {
+        const apiInformation = useApiKeyStore.getState().getKey("Deepseek R1") || {
+            url: "",
+            key: "",
+        }
+        if (apiInformation.url.trim() === "" || apiInformation.key.trim() === "") return ""
+
+        return fetch(apiInformation.url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiInformation.key}`,
+            },
+            body: JSON.stringify({
+                model: "deepseek-chat", // 或 deepseek-coder / deepseek-R1，如果 R1 有对应的 identifier
+                messages: messages.map((it) => ({
+                    role: it.role,
+                    content: it.contents.join("\n")
+                })),
+                stream: false,
+            }),
+        }).then(async data => {
+            const json = await data.json()
+            
+            
+            return json.choices[0]["message"]["content"]||""
+
+
+        });
+    }
     stopStream = false;
     async sendMessage(config: ChatConfig, updater: (action: SetStateAction<ChatSession>) => void) {
         const botMessage: ChatMessage = {
@@ -178,6 +208,7 @@ export class DeepseekApi implements ChatApi {
     stop(): void {
         this.stopStream = true
     }
+
 }
 
 // 定义 OpenAI API 的响应结构（按 Chat Completion 流模式）

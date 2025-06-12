@@ -63,7 +63,7 @@ function ChatSessionList() {
         <h1 className={"text-foreground/70"}>{language["sidebar.chat-list.title"]}</h1>
         <div className={"w-full grow overflow-hidden rounded-xl border-[1px] border-foreground/20  drop-shadow-2xl "}>
             <div
-                className={"w-full h-full overflow-y-auto p-2 flex flex-col items-center justify-start rounded-xl "}>
+                className={"w-full h-full overflow-y-auto p-2 flex flex-col items-center justify-start rounded-xl overflow-x-hidden"}>
                 {chatStore.sessions.map((session, index) => {
                     return <ChatSessionListItem key={index} session={session} index={index}/>
                 })}
@@ -78,7 +78,7 @@ function ChatSessionListItem({session, index}: { session: ChatSession, index: nu
     const chatStore = useChatStore()
     const router = useRouter()
     return <>
-        <Button className={"w-full h-12 text-lg"} onClick={() => {
+        <Button className={"w-full h-12 text-lg max-w-full "} onClick={() => {
             chatStore.setChatStore(prev => {
                 return {
                     ...prev,

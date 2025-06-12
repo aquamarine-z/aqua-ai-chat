@@ -25,7 +25,8 @@ export function ChatList() {
     useEffect(() => {
         chatListStateStore.setScrollToBottom(() => {
             if (virtuosoRef.current) {
-                //@ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-expect-error
                 virtuosoRef.current?.scrollToIndex({
                     index: Number.MAX_SAFE_INTEGER,
                     align: 'end', // 可选: 'start' | 'center' | 'end'
@@ -48,7 +49,8 @@ export function ChatList() {
                          return <div className={"w-full flex items-center justify-center"}>
                              <div className={" px-6 max-w-5xl w-full"}>
                                  <ChatFragment
-                                     //@ts-ignore
+                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                     //@ts-expect-error
                                      message={{...item, contents: [...item.contents]}} key={index}
                                      messageIndex={index}
                                      session={chatStore.getCurrentSession()}

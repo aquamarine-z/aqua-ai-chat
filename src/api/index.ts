@@ -12,9 +12,11 @@ export class ChatConfig{
     onFinish?: () => void;
     messageIndex?:number;
     userMessage?: ChatMessage;
+    
 }
 export interface ChatApi {
-    sendMessage:(config:ChatConfig,updater:(action:SetStateAction<ChatSession>)=>void)=>void
+    sendMessage:(config:ChatConfig,updater:(action:SetStateAction<ChatSession>)=>void)=>void,
+    query:(messages:ChatMessage[])=>Promise<string>,
     stop:()=>void,
 }
 export function getApiByModelName(model:ModelConfig){

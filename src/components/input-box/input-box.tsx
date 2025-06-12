@@ -12,6 +12,7 @@ import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
 import {useInputStore} from "@/store/input-store";
 import {ChatMessage, defaultUserMessage} from "@/schema/chat-message";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
+import useSettingsStore from "@/store/settings-store";
 
 
 export const InputBox = () => {
@@ -50,6 +51,7 @@ export const InputBox = () => {
                     })
                     return
                 }
+
                 chatListStateStore.scrollToBottom()
                 let userMessage: ChatMessage;
                 if (message) {
@@ -77,7 +79,38 @@ export const InputBox = () => {
                     },
                     userMessage: userMessage,
                 }
+                const settings = useSettingsStore.getState()
+                if (settings["auto-generate-session-name"]) {
+                    if (chatStore.getCurrentSession().messages.length <= 1) {
+                        const messages = [
+                            {
+                                role: 'system',
+                                contents: [`Following the message the user given, output a name of this session,and the language you use must follow the user's language
+                                example:
+                                input: What is XXX
+                                output: Introduction of XXX
+                                `
+                                ]
+                            }, userMessage
+                        ] as ChatMessage[]
+                        //console.log(messages)
+                        chatApi.query(messages.map(it => {
+                            return {
+                                role: it.role,
+                                contents: it.contents
+                            }
+                        }) as ChatMessage[]).then(content => {
+                            //console.log(content)
+                            chatStore.updateCurrentSession(session => ({
+                                ...session,
+                                name: content
+                            }))
+                        })
+                    }
+                }
+                
                 chatApi.sendMessage(config, chatStore.updateCurrentSession)
+
                 chatApiRef.current = chatApi as ChatApi;
             }
             return action

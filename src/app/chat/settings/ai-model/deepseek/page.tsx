@@ -81,7 +81,6 @@ export function ModelBaseInformationSelectCard(props: { modelName: string, title
                     toast.success(language['settings.AI-Models.save.success'])
                 }}><SaveIcon/>{language["settings.AI-Models.save"]}</Button>
             </div>}
-
         </CardContent>
     </Card>
 
