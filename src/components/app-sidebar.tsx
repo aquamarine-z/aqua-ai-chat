@@ -11,6 +11,8 @@ import {useLanguageStore} from "@/store/language-store";
 import {SaveIcon, SettingsIcon} from "lucide-react";
 import {useChatStore} from "@/store/chat-store";
 import {ChatSession} from "@/schema/chat-session";
+import {ContextMenu, ContextMenuContent, ContextMenuTrigger} from "@/components/ui/context-menu";
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 
 export function AppSidebar() {
     const appInformation = useAppInformationStore()
@@ -73,26 +75,57 @@ function ChatSessionList() {
     </SidebarContent>
 }
 
-function ChatSessionListItem({session, index}: { session: ChatSession, index: number }) {
-    const pathname = usePathname()
-    const chatStore = useChatStore()
-    const router = useRouter()
-    return <>
-        <Button className={"w-full h-12 text-lg max-w-full "} onClick={() => {
-            chatStore.setChatStore(prev => {
-                return {
-                    ...prev,
-                    currentSessionIndex: index,
+function ChatSessionListItem({session, index}: { session: ChatSession; index: number }) {
+    const pathname = usePathname();
+    const chatStore = useChatStore();
+    const router = useRouter();
+
+    return (
+        <ContextMenu onOpenChange={(open) => {
+            if (open) {
+                //如果是手机端 则添加震动效果
+                if (typeof window !== "undefined" && "vibrate" in navigator) {
+                    navigator.vibrate(50);
                 }
-            })
-            if (pathname !== "/chat/sessions") {
-                router.push("/chat/sessions");
             }
-        }} key={index}
-                variant={(pathname === "/chat/sessions" && chatStore.currentSessionIndex === index) ? "default" : "ghost"}>
-            {session.name}
-        </Button>
-    </>
+        }}>
+            <ContextMenuTrigger asChild>
+                <Button
+                    className="w-full h-12 text-lg max-w-full select-none"
+                    onClick={(event) => {
+                        if (event.button === 0) {
+                            chatStore.setChatStore((prev) => ({
+                                ...prev,
+                                currentSessionIndex: index,
+                            }));
+
+                            if (pathname !== "/chat/sessions") {
+                                router.push("/chat/sessions");
+                            }
+                        }
+                    }}
+                    variant={
+                        pathname === "/chat/sessions" && chatStore.currentSessionIndex === index
+                            ? "default"
+                            : "ghost"
+                    }
+                >
+                    {session.name}
+                </Button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button>修改名称</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        1
+                    </DialogContent>
+                </Dialog>
+
+            </ContextMenuContent>
+        </ContextMenu>
 
 
+    );
 }
