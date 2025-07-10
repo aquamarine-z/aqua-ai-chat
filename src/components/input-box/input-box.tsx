@@ -41,6 +41,22 @@ export const InputBox = () => {
     useEffect(() => {
         inputStore.updateInputStore(action => {
             action.chat = (message?: ChatMessage) => {
+                if (streaming) {
+                    return; // 如果正在流式传输消息，则不允许发送新消息
+                }
+                if (!textareaRef.current) return;
+                //将此对话排序移到顶端
+                /*chatStore.setChatStore(prev=>{
+                    // @ts-ignore
+                    const currentSession = prev.sessions[prev.currentSessionIndex!]!;
+                    if (currentSession) {
+                        // @ts-ignore
+                        prev.sessions = prev.sessions.filter((s, index) => index !== prev.currentSessionIndex);
+                        prev.sessions=[currentSession, ...prev.sessions];
+                        prev.currentSessionIndex = 0; // 更新当前会话索引
+                    }
+                    return prev;
+                })*/
                 const currentSession = chatStore.getCurrentSession()
                 if (currentSession.streaming) {
                     if (chatApiRef.current) {
@@ -108,9 +124,12 @@ export const InputBox = () => {
                         })
                     }
                 }
-                
-                chatApi.sendMessage(config, chatStore.updateCurrentSession)
-
+                const update=useChatStore.getState().updateCurrentSession
+                const name= useChatStore.getState().getCurrentSession().name
+                chatApi.sendMessage(config,(value)=>{
+                    update(value)
+                    //console.log("Updating",name)
+                } )
                 chatApiRef.current = chatApi as ChatApi;
             }
             return action
@@ -208,10 +227,7 @@ export const InputBox = () => {
                         disabled={sendMessageButtonDisabled}>
                     {chatStore.getCurrentSession().streaming ? <SquareIcon/> : <SendIcon/>}
                 </Button>
-
             </div>
         </div>
     </div>
-
-
 }

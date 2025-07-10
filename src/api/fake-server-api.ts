@@ -47,6 +47,7 @@ export class FakeServerApi implements ChatApi {
         const userMessage: ChatMessage = {
             ...config.userMessage
         } as ChatMessage
+        //console.log(userMessage)
         updater(prev => {
             return {
                 ...prev,
@@ -74,7 +75,7 @@ export class FakeServerApi implements ChatApi {
                             botMessage.thinking!.finishTime = Date.now()
                             botMessage.thinking!.finished = true
                             botMessage.thinking = {...botMessage.thinking!}
-                            console.log(botMessage)
+                            //console.log(botMessage)
                             updater(prev => {
                                 return {
                                     ...prev,

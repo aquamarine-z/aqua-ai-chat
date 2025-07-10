@@ -2,6 +2,8 @@ import {z} from "zod";
 import {ChatMessage, ChatMessageContentSchema, defaultGreetingMessage} from "@/schema/chat-message";
 import {defaultModelConfig, ModelConfigSchema} from "@/schema/model-config";
 import {defaultInputStorage, InputStorageSchema} from "@/schema/input-storage";
+import {SetStateAction} from "react";
+import {applySetStateAction} from "@/utils";
 
 
 export const ChatSessionSchema = z.object({
@@ -18,6 +20,5 @@ export const defaultChatSession: ChatSession = {
     name: "New Conversation",
     streaming: false,
     inputStorage: defaultInputStorage,
-
 
 }
