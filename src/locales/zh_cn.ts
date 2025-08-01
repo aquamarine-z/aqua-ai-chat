@@ -3,7 +3,7 @@ export const zh_cn = {
     "cancel": "取消",
     "copy.success": "已成功复制到剪贴板",
     "copy.fail": "复制到剪贴板失败，请检查相关权限",
-    
+
     "page-header.title": "Aqua AI Chat",
 
     "input-box.input.placeholder": "请输入你的问题 (Enter 发送，Shift+Enter 换行)",
@@ -66,7 +66,7 @@ export const zh_cn = {
     "settings.AI-Models.key": "API Key",
     "settings.AI-Models.save": "保存",
     "settings.AI-Models.give-up": "放弃保存",
-    "settings.AI-Models.save.success":"保存成功",
+    "settings.AI-Models.save.success": "保存成功",
 
     "settings.general.language.title": "语言设置",
     "settings.general.language.app-language": "语言",
@@ -75,7 +75,19 @@ export const zh_cn = {
     "settings.general.language.use-language-as-system-prompt": "将使用语言作为系统提示词传入大模型",
 
     "settings.general.session.common": "常规设置",
-    "settings.general.session.common.auto-generate-title":"根据问题自动总结对话标题"
+    "settings.general.session.common.auto-generate-title": "根据问题自动总结对话标题",
 
+    "chat-session-menu.actions.rename": "重命名会话",
+    "chat-session-menu.actions.delete": "删除此会话",
+    "chat-session-menu.actions.settings": "设置",
 
+    "dialog.rename.title": "重命名会话",
+    "dialog.rename.input.placeholder": "请输入会话名称",
+    "dialog.rename.button.confirm": "保存",
+    "dialog.rename.button.cancel": "取消",
+
+    "dialog.delete.title": "删除此会话",
+    "dialog.delete.message": "你确定要删除此会话吗？该操作不可恢复！",
+    "dialog.delete.button.confirm": "确定",
+    "dialog.delete.button.cancel": "取消",
 }

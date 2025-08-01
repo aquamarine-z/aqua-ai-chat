@@ -59,4 +59,13 @@ export const en = {
     "settings.general.language.app-language": "App Language",
     "settings.general.language.app-language.set.success": "Language changed successfully",
     "settings.general.language.app-language.set.fail": "Failed to change language",
+
+    "chat-session-menu.actions.rename": "Rename Session",
+    "chat-session-menu.actions.delete": "Delete Session",
+    "chat-session-menu.actions.settings": "Settings",
+
+    "dialog.rename.title": "Rename Session",
+    "dialog.rename.input.placeholder": "Please enter a new session name",
+    "dialog.rename.button.confirm": "Save",
+    "dialog.rename.button.cancel": "Cancel",
 };

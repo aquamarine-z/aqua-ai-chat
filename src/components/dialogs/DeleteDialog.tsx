@@ -3,43 +3,36 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@
 import {useLanguageStore} from "@/store/language-store";
 import {Button} from "@/components/ui/button";
 
-export const RenameDialog = (props: {
-    children?: JSX.Element,
-    onConfirm: (newName: string) => void,
-    defaultName?: string,
-}) => {
-    const [name, setName] = useState<string>(props.defaultName || "");
-    const [open, setOpen] = useState<boolean>(false);
-    const language = useLanguageStore().language
 
-    return (
-        <Dialog open={open} modal={true} onOpenChange={setOpen}>
+export const DeleteDialog = (props: { children: JSX.Element, onConfirm: () => void }) => {
+    const language = useLanguageStore().language;
+    const [open, setOpen] = useState<boolean>(false);
+    return  <Dialog open={open} modal={true} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {props.children}
             </DialogTrigger>
             <DialogContent className={"w-sm  h-fit flex flex-col items-center px-4"}>
                 <DialogHeader>
-                    <DialogTitle>{language['dialog.rename.title']}</DialogTitle>
+                    <DialogTitle>{language['dialog.delete.title']}</DialogTitle>
                 </DialogHeader>
-                <div className={"w-full flex flex-col gap-6 mt-6"}>
-                    <input type="text" placeholder={language['dialog.rename.input.placeholder']} value={name}
-                           onChange={e => setName(e.target.value)} className={"w-full m-0 p-2 border rounded"}/>
+                <div className={"w-full flex flex-col gap-6 mt-3 items-center"}>
+                     <p className={"text-md"}>{language['dialog.delete.message']}</p>
                     <div className={"w-full gap-2 px-0 flex flex-row items-center justify-evenly"}>
+
                         <Button variant={"destructive"}
                                 onClick={() => {
                                     setOpen(false);
                                 }}
                                 className={"w-1/3 text-white p-2 rounded"}
-                        >{language['dialog.rename.button.cancel']}</Button>
+                        >{language['dialog.delete.button.cancel']}</Button>
                         <Button className={"w-1/3 text-white p-2 rounded"}
                                 onClick={() => {
-                                    props.onConfirm(name);
+                                    props.onConfirm();
                                     setOpen(false);
-                                }}>{language['dialog.rename.button.confirm']}
+                                }}>{language['dialog.delete.button.confirm']}
                         </Button>
                     </div>
                 </div>
             </DialogContent>
         </Dialog>
-    )
 }

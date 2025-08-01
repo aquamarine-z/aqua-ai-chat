@@ -8,12 +8,13 @@ import {Button} from "./ui/button";
 import {cn} from "@/lib/utils";
 import {usePathname, useRouter} from "next/navigation";
 import {useLanguageStore} from "@/store/language-store";
-import {SaveIcon, SettingsIcon} from "lucide-react";
+import {PenIcon, SaveIcon, SettingsIcon, TrashIcon} from "lucide-react";
 import {useChatStore} from "@/store/chat-store";
 import {ChatSession} from "@/schema/chat-session";
 import React, {useState} from "react";
-import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
+import {Dialog, DialogContent} from "@/components/ui/dialog";
 import {RenameDialog} from "@/components/dialogs/RenameDialog";
+import { DeleteDialog } from "./dialogs/DeleteDialog";
 
 export function AppSidebar() {
     const appInformation = useAppInformationStore()
@@ -140,14 +141,16 @@ function ChatSessionListItem({session, index}: { session: ChatSession; index: nu
     const chatStore = useChatStore();
     const router = useRouter();
     const [informationDialogOpen, setInformationDialogOpen] = useState(false)
+    const language= useLanguageStore().language;
     return (
         <>
             <Dialog open={informationDialogOpen} onOpenChange={(open) => setInformationDialogOpen(open)}>
-                <DialogTitle>
-
-                </DialogTitle>
-                <DialogContent>
-                    <RenameDialog onConfirm={name=>{
+                <DialogContent className={"w-sm h-124 flex flex-col items-center justify-start pt-8 pb-4 px-4 gap-0 "}>
+                    <h1 className={"font-semibold text-[24px] "}>{session.name}</h1>
+                    <div className={"w-full h-8 flex flex-col items-center justify-center px-4"}>
+                        <div className={"h-[0.5px] w-full bg-neutral-600 "}></div>
+                    </div>
+                    <RenameDialog defaultName={session.name} onConfirm={name => {
                         chatStore.setChatStore((prev) => {
                             // @ts-ignore
                             const newSessions = [...prev.sessions];
@@ -157,17 +160,40 @@ function ChatSessionListItem({session, index}: { session: ChatSession; index: nu
                                 sessions: newSessions,
                             };
                         });
-                        //setInformationDialogOpen(false);
+                        setInformationDialogOpen(false);
                     }}>
-                        <Button>改名</Button>
+                        <Button variant={"ghost"}
+                                className={"w-full h-12 px-4 flex flex-row items-center justify-start gap-2"}>
+                            <PenIcon/>
+                            <span className={"text-lg w-full text-center"}>{language['chat-session-menu.actions.rename']}</span>
+                        </Button>
+
                     </RenameDialog>
+                    <DeleteDialog onConfirm={()=>{
+                        chatStore.setChatStore((prev) => {
+                            // @ts-ignore
+                            const newSessions = [...prev.sessions];
+                            newSessions.splice(index, 1);
+                            return {
+                                ...prev,
+                                sessions: newSessions,
+                                currentSessionIndex: Math.max(0, index - 1),
+                            };
+                        });
+                        setInformationDialogOpen(false);
+                    }}>
+                         <Button variant={"ghost"}
+                                className={"w-full h-12 px-4 flex flex-row items-center justify-start gap-2"}>
+                            <TrashIcon/>
+                            <span className={"text-lg w-full text-center"}>{language['chat-session-menu.actions.delete']}</span>
+                        </Button>
+                    </DeleteDialog>
                 </DialogContent>
             </Dialog>
             <Button
-                onContextMenu={(e)=>{
+                onContextMenu={(e) => {
                     e.preventDefault()
                     setInformationDialogOpen(true);
-
                 }}
                 className="w-full h-12 text-lg max-w-full select-none"
                 onClick={(event) => {
