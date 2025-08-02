@@ -13,7 +13,7 @@ export function ModelSelector() {
     const [modelName, setModelName] = useState("")
     useEffect(() => {
         setModelName(chatStore.getCurrentSession().modelConfig.name)
-    }, []);
+    }, [chatStore.currentSessionIndex]);
     
     return <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild >

@@ -1,9 +1,7 @@
 import {z} from "zod";
-import {ChatMessage, ChatMessageContentSchema, defaultGreetingMessage} from "@/schema/chat-message";
+import {ChatMessageContentSchema, defaultGreetingMessage} from "@/schema/chat-message";
 import {defaultModelConfig, ModelConfigSchema} from "@/schema/model-config";
 import {defaultInputStorage, InputStorageSchema} from "@/schema/input-storage";
-import {SetStateAction} from "react";
-import {applySetStateAction} from "@/utils";
 
 
 export const ChatSessionSchema = z.object({
@@ -12,6 +10,7 @@ export const ChatSessionSchema = z.object({
     name: z.string(),
     streaming: z.boolean().nullable().optional(),
     inputStorage: InputStorageSchema,
+    id: z.number().optional(),
 })
 export type ChatSession = z.infer<typeof ChatSessionSchema>
 export const defaultChatSession: ChatSession = {
@@ -21,4 +20,11 @@ export const defaultChatSession: ChatSession = {
     streaming: false,
     inputStorage: defaultInputStorage,
 
+}
+
+export function createNewChatSession(): ChatSession {
+    return {
+        ...defaultChatSession,
+        id: Math.floor(Math.random() * 1000000), // Generate a random ID for the new session
+    }
 }
