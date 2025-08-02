@@ -10,3 +10,11 @@ export function applySetStateAction<T>(prev: T, action: SetStateAction<T>): T {
     }
     return value
 }
+
+export function generateAvailableId(existingIds: Set<number>): number {
+    let id = Math.floor(Math.random() * 1000000);
+    while (existingIds.has(id)) {
+        id = Math.floor(Math.random() * 1000000);
+    }
+    return id;
+}

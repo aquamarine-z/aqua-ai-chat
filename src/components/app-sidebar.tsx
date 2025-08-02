@@ -93,18 +93,7 @@ function ChatSessionList() {
             // If the dragged item is not the same as the target index, swap the sessions
 
             // Swap the sessions in the store
-            chatStore.setChatStore((prev) => {
-                // @ts-ignore
-                const newSessions = [...prev.sessions];
-                const draggedSession = newSessions[draggingIndex];
-                newSessions.splice(draggingIndex, 1);
-                newSessions.splice(index, 0, draggedSession);
-                return {
-                    ...prev,
-                    sessions: newSessions,
-                    currentSessionIndex: index,
-                };
-            });
+            chatStore.swapSession(draggingIndex, index);
             setDraggingIndex(index);
         }
     };
@@ -122,7 +111,7 @@ function ChatSessionList() {
                 className={"w-full h-full overflow-y-auto p-2 flex flex-col items-center justify-start rounded-xl overflow-x-hidden"}>
                 {chatStore.sessions.map((session, index) => {
                     return <div onDragStart={() => onItemDragStart(index)}
-                                draggable={!chatStore.getCurrentSession().streaming} key={index}
+                                draggable
                                 onDragOver={(event) => onItemDragOver(event, index)}
                                 onDragEnd={onItemDragEnd}
                                 onDrop={onItemDrop}
@@ -151,15 +140,10 @@ function ChatSessionListItem({session, index}: { session: ChatSession; index: nu
                         <div className={"h-[0.5px] w-full bg-neutral-600 "}></div>
                     </div>
                     <RenameDialog defaultName={session.name} onConfirm={name => {
-                        chatStore.setChatStore((prev) => {
-                            // @ts-ignore
-                            const newSessions = [...prev.sessions];
-                            newSessions[index] = {...newSessions[index], name: name};
-                            return {
-                                ...prev,
-                                sessions: newSessions,
-                            };
-                        });
+                        chatStore.updateSessionById(session.id!!, (prev) => ({
+                            ...prev,
+                            name: name,
+                        }))
                         setInformationDialogOpen(false);
                     }}>
                         <Button variant={"ghost"}
@@ -170,16 +154,8 @@ function ChatSessionListItem({session, index}: { session: ChatSession; index: nu
 
                     </RenameDialog>
                     <DeleteDialog onConfirm={()=>{
-                        chatStore.setChatStore((prev) => {
-                            // @ts-ignore
-                            const newSessions = [...prev.sessions];
-                            newSessions.splice(index, 1);
-                            return {
-                                ...prev,
-                                sessions: newSessions,
-                                currentSessionIndex: Math.max(0, index - 1),
-                            };
-                        });
+                        // Delete the session
+                        chatStore.removeSessionById(session.id!!);
                         setInformationDialogOpen(false);
                     }}>
                          <Button variant={"ghost"}
