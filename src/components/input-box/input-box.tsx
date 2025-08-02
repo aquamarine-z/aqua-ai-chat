@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {useLanguageStore} from "@/store/language-store";
 import {ModelSelector} from "@/components/input-box/model-selector";
 import {Suggestions} from "@/components/input-box/suggesions";
-import {useEffect, useRef, useState} from "react";
+import {SetStateAction, useEffect, useRef, useState} from "react";
 import {useChatStore} from "@/store/chat-store";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
 import {ChevronDown, SendIcon, SquareIcon} from "lucide-react";
@@ -13,6 +13,7 @@ import {useInputStore} from "@/store/input-store";
 import {ChatMessage, defaultUserMessage} from "@/schema/chat-message";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import useSettingsStore from "@/store/settings-store";
+import {ChatSession} from "@/schema/chat-session";
 
 
 export const InputBox = () => {
@@ -44,6 +45,7 @@ export const InputBox = () => {
                 if (streaming) {
                     return; // 如果正在流式传输消息，则不允许发送新消息
                 }
+                const sessionId = chatStore.getCurrentSession().id;
                 if (!textareaRef.current) return;
                 //将此对话排序移到顶端
                 /*chatStore.setChatStore(prev=>{
@@ -62,7 +64,7 @@ export const InputBox = () => {
                     if (chatApiRef.current) {
                         chatApiRef.current.stop()
                     }
-                    chatStore.updateCurrentSession(prev => {
+                    chatStore.updateSessionById(sessionId!!, prev => {
                         return {...prev, streaming: false}
                     })
                     return
@@ -75,7 +77,8 @@ export const InputBox = () => {
                 } else {
                     userMessage = {...defaultUserMessage}
                     userMessage.contents = [currentSession.inputStorage.text]
-                    chatStore.updateCurrentSession(session => {
+
+                    chatStore.updateSessionById(sessionId!!, session => {
                         session.inputStorage.text = ""
                         return session
                     })
@@ -87,7 +90,7 @@ export const InputBox = () => {
                 const config: ChatConfig = {
                     session: currentSession,
                     onFinish: () => {
-                        chatStore.updateCurrentSession(session => {
+                        chatStore.updateSessionById(sessionId!!, session => {
                             session.streaming = false;
                             return session;
                         })
@@ -124,12 +127,14 @@ export const InputBox = () => {
                         })
                     }
                 }
-                const update=useChatStore.getState().updateCurrentSession
-                const name= useChatStore.getState().getCurrentSession().name
-                chatApi.sendMessage(config,(value)=>{
+                const update = (value: SetStateAction<ChatSession>) => {
+                    chatStore.updateSessionById(sessionId!!, value)
+                }
+                const name = useChatStore.getState().getCurrentSession().name
+                chatApi.sendMessage(config, (value) => {
                     update(value)
                     //console.log("Updating",name)
-                } )
+                })
                 chatApiRef.current = chatApi as ChatApi;
             }
             return action
@@ -200,7 +205,7 @@ export const InputBox = () => {
 
             <Textarea ref={textareaRef}
                       onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey&& !e.nativeEvent.isComposing) {
+                          if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
                               e.preventDefault(); // 阻止默认的换行行为
                               if (!sendMessageButtonDisabled) {
                                   sendMessageButtonRef.current?.click()
