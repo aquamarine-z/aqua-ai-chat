@@ -33,7 +33,6 @@ export const InputBox = () => {
     const streaming = useChatStore(state => {
         return state.getCurrentSession().streaming || false
     })
-
     const [sendMessageButtonDisabled, setSendMessageButtonDisabled] = useState(false);
     useEffect(() => {
         setSendMessageButtonDisabled(!streaming && inputContent.trim() === "");
@@ -43,9 +42,16 @@ export const InputBox = () => {
         inputStore.updateInputStore(action => {
             action.chat = (message?: ChatMessage) => {
                 if (streaming) {
+                    //console.log(1)
+                    if(!message){
+                        chatApiRef.current?.stop()
+                    }
+                    chatStore.updateSessionById(chatStore.getCurrentSession().id!!, prev => {
+                        return {...prev, streaming: false}
+                    })
                     return; // 如果正在流式传输消息，则不允许发送新消息
                 }
-                const sessionId = chatStore.getCurrentSession().id;
+                const sessionId = chatStore.getCurrentSession().id!!;
                 if (!textareaRef.current) return;
                 //将此对话排序移到顶端
                 /*chatStore.setChatStore(prev=>{
@@ -139,7 +145,7 @@ export const InputBox = () => {
             }
             return action
         })
-    }, [chatStore.currentSessionIndex]);
+    }, [chatStore.currentSessionIndex,streaming]);
     useEffect(() => {
         const handleFocusIn = () => setFocus(true);
         const handleFocusOut = () => {

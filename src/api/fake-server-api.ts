@@ -75,11 +75,21 @@ export class FakeServerApi implements ChatApi {
                             botMessage.thinking!.finishTime = Date.now()
                             botMessage.thinking!.finished = true
                             botMessage.thinking = {...botMessage.thinking!}
+                            botMessage.streaming=false
                             //console.log(botMessage)
                             updater(prev => {
                                 return {
                                     ...prev,
-                                    messages: prev.messages.concat()
+                                    messages: prev.messages.concat(),
+                                    streaming: false,
+                                }
+                            })
+                        }else{
+                            updater(prev => {
+                                return {
+                                    ...prev,
+                                    messages: prev.messages.concat(),
+                                    streaming: false,
                                 }
                             })
                         }
@@ -111,10 +121,12 @@ export class FakeServerApi implements ChatApi {
             ((i:number)=>{
                 setTimeout(() => {
                 if (this.stopStream) {
+                    botMessage.streaming=false
                     updater(prev => {
                         return {
                             ...prev,
-                            messages: prev.messages.concat()
+                            messages: prev.messages.concat(),
+                            streaming: false,
                         }
                     })
                     return
@@ -148,6 +160,7 @@ export class FakeServerApi implements ChatApi {
     stop(): void {
         // 停止流式传输
         this.stopStream = true;
+
     }
 
 }

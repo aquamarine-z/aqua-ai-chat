@@ -168,6 +168,8 @@ export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) =>
             }
 
         }
+
+
         if (changed) {
             get().updateCurrentSession(action => ({...action, messages}))
         }

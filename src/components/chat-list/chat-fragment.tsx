@@ -1,6 +1,6 @@
 'use client'
 import {ChatMessage} from "@/schema/chat-message";
-import {memo, SetStateAction} from "react";
+import {memo, SetStateAction, useEffect} from "react";
 import {cn} from "@/lib/utils";
 import {Thinking} from "@/components/chat-list/thinking";
 import {CopyIcon, RefreshCcw} from "lucide-react";
@@ -26,9 +26,15 @@ export const ChatFragment = memo(
     function ChatFragment(props: ChatFragmentProps) {
         const language = useLanguageStore().language;
         const inputStore = useInputStore()
-        const streaming = useChatStore(state => {
+        const sessionStreaming = useChatStore(state => {
             return state.getCurrentSession().streaming
         })
+        const messageStreaming = props.message.streaming ;
+        const streaming = sessionStreaming || messageStreaming;
+        //console.log("streaming", streaming, props.message.streaming, sessionStreaming)
+        /*useEffect(()=>{
+            console.log("streaming changed", streaming)
+        },[streaming])*/
         return (
             <div key={props.messageIndex} className={"my-3 w-full h-fit flex flex-col gap-6"}>
                 <div className={cn("flex flex-row", props.message.role === "user" ? "justify-end" : "justify-start")}>
@@ -76,7 +82,7 @@ export const ChatFragment = memo(
                                     <ChatFragmentAction
                                         trigger={
                                             <Button className={"h-8 w-8"} variant={"ghost"}
-                                                    disabled={streaming || false}
+                                                    disabled={streaming|| false}
                                                     onClick={() => {
                                                         //获取以此index起始的上一条消息用户的内容
                                                         const lastUserMessage = props.session.messages.slice(0, props.messageIndex).reverse().find(msg => msg.role === "user");

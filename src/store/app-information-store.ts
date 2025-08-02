@@ -9,5 +9,5 @@ interface AppInformationStore {
 export const useAppInformationStore = create<AppInformationStore>((set) => ({
     version: "0.0.1",
     name: "Beta",
-    description: "This is a sample application using Zustand for state management.",
+    description: "This is the beta version of Aqua AI Chat.",
 }));
