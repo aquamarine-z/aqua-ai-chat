@@ -77,9 +77,21 @@ export const zh_cn = {
     "settings.general.session.common": "常规设置",
     "settings.general.session.common.auto-generate-title": "根据问题自动总结对话标题",
 
+    "settings.general.general.storage.title": "缓存设置",
+    "settings.general.general.storage.clear-all": "清除所有缓存",
+    "settings.general.general.storage.session": "会话缓存",
+    "settings.general.general.storage.session.clear": "清除会话缓存",
+    "settings.general.general.storage.clear-button": "清除",
+
+
     "chat-session-menu.actions.rename": "重命名会话",
     "chat-session-menu.actions.delete": "删除此会话",
     "chat-session-menu.actions.settings": "设置",
+
+    "dialog.default.title": "提示",
+    "dialog.default.messages.confirm": "你确定要执行此操作吗？",
+    "dialog.default.button.confirm": "确定",
+    "dialog.default.button.cancel": "取消",
 
     "dialog.rename.title": "重命名会话",
     "dialog.rename.input.placeholder": "请输入会话名称",
@@ -90,4 +102,12 @@ export const zh_cn = {
     "dialog.delete.message": "你确定要删除此会话吗？该操作不可恢复！",
     "dialog.delete.button.confirm": "确定",
     "dialog.delete.button.cancel": "取消",
+    "dialog.delete.success": "会话删除成功",
+
+    "dialog.delete-all-storage.title": "清除所有缓存",
+    "dialog.delete-all-storage.message": "你确定要清除所有缓存吗？该操作不可恢复！",
+    "dialog.delete-all-storage.button.confirm": "清除",
+    "dialog.delete-all-storage.button.cancel": "取消",
+    "dialog.delete-all-storage.success": "缓存清除成功",
+    "dialog.delete-all-storage.fail": "缓存清除失败，请检查相关权限",
 }
