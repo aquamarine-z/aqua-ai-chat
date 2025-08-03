@@ -110,7 +110,7 @@ function ChatSessionList() {
             <div
                 className={"w-full h-full overflow-y-auto p-2 flex flex-col items-center justify-start rounded-xl overflow-x-hidden"}>
                 {chatStore.sessions.map((session, index) => {
-                    return <div onDragStart={() => onItemDragStart(index)}
+                    return <div key={index} onDragStart={() => onItemDragStart(index)}
                                 draggable
                                 onDragOver={(event) => onItemDragOver(event, index)}
                                 onDragEnd={onItemDragEnd}
