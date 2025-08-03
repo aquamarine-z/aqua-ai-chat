@@ -6,16 +6,23 @@ import {applySetStateAction} from "@/utils";
 // 定义 SettingsStore 的类型
 interface SettingsStore {
     "auto-generate-session-name": boolean; // 示例设置项
-    setProperty: (action: SetStateAction<Partial<SettingsStore>>) => void
+    setProperty: (action: SetStateAction<Partial<SettingsStore>>) => void,
+    reset: () => void,
 }
 
+const initialState = {
+    "auto-generate-session-name": true, // 初始值
+}
 // 创建持久化的设置存储
-const useSettingsStore = create(
+export const useSettingsStore = create(
     persist<SettingsStore>(
         (set, get) => ({
-            "auto-generate-session-name": true, // 初始值
+            ...initialState,
             setProperty: (action) => {
                 set(applySetStateAction(get(), action))
+            },
+            reset: () => {
+                set(initialState);
             },
         }),
         {name: "settings"} // 持久化存储的名称

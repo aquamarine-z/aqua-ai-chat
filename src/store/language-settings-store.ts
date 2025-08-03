@@ -5,13 +5,18 @@ export interface LanguageSettingsStore {
     languageName: string
     setLanguageName: (name: string) => boolean
     asPrompt: boolean
-    setAsPrompt: (value: boolean) => void
+    setAsPrompt: (value: boolean) => void,
+    reset: () => void
 }
 
+const initialState = {
+    languageName: 'zh_cn',
+    asPrompt: false,
+}
 export const useLanguageSettingsStore = create<LanguageSettingsStore>()(
     persist(
         (set, get) => ({
-            languageName: 'zh_cn',
+            ...initialState,
             setLanguageName: (name: string): boolean => {
                 if (name === 'zh_cn') {
                     set({languageName: 'zh_cn'})
@@ -25,9 +30,12 @@ export const useLanguageSettingsStore = create<LanguageSettingsStore>()(
                 }
                 return true
             },
-            asPrompt: false,
+
             setAsPrompt: (value: boolean) => {
                 set({asPrompt: value})
+            },
+            reset: () => {
+                set(initialState)
             },
         }),
         {

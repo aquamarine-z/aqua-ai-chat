@@ -19,6 +19,7 @@ interface ChatStore {
     removeSessionById: (id: number) => void;
     updateSessionById: (id: number, session: SetStateAction<ChatSession>) => void;
     swapSession: (index1: number, index2: number) => void;
+    reset: () => void;
 }
 
 const customStorage = {
@@ -48,10 +49,13 @@ const customStorage = {
         localStorage.removeItem(name)
     },
 }
-export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) => ({
-    currentSessionIndex: 0 as number,
+const initialState={
+     currentSessionIndex: 0 as number,
     sessions: [defaultChatSession] as ChatSession[],
     sessionIdMap: new Map<number, number>(),
+}
+export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) => ({
+    ...initialState,
     getCurrentSession: () => {
         const {currentSessionIndex, sessions} = get()
         return sessions[currentSessionIndex]
@@ -241,6 +245,11 @@ export const useChatStore = create<ChatStore>()(persist<ChatStore>((set, get) =>
             })
 
         }
+    },
+    reset:()=>{
+        set({
+            ...initialState
+        })
     }
 
 }), {
