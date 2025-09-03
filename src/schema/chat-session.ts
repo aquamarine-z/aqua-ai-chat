@@ -14,7 +14,7 @@ export const ChatSessionSchema = z.object({
 })
 export type ChatSession = z.infer<typeof ChatSessionSchema>
 export const defaultChatSession: ChatSession = {
-    messages: [defaultGreetingMessage],
+    messages: [],
     modelConfig: defaultModelConfig,
     name: "New Conversation",
     streaming: false,

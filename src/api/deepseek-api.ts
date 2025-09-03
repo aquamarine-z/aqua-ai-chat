@@ -16,7 +16,6 @@ export class DeepseekApi implements ChatApi {
             key: "",
         }
         if (apiInformation.url.trim() === "" || apiInformation.key.trim() === "") return ""
-
         return fetch(apiInformation.url, {
             method: "POST",
             headers: {
@@ -33,14 +32,12 @@ export class DeepseekApi implements ChatApi {
             }),
         }).then(async data => {
             const json = await data.json()
-            
-            
-            return json.choices[0]["message"]["content"]||""
-
-
+            return json.choices[0]["message"]["content"] || ""
         });
     }
+
     stopStream = false;
+
     async sendMessage(config: ChatConfig, updater: (action: SetStateAction<ChatSession>) => void) {
         const botMessage: ChatMessage = {
             role: "assistant",
@@ -67,7 +64,7 @@ export class DeepseekApi implements ChatApi {
                 streaming: true,
             }
         })
-        
+
         if (userMessage.contents[0].startsWith("/")) {
             //match /set-key <key> command
             console.log("command")
@@ -95,7 +92,7 @@ export class DeepseekApi implements ChatApi {
                 url: "",
                 key: "",
             }
-            
+
             botMessage.thinking = undefined
             const key = apiInformation.key
             if (!key || key.trim() === "") {
@@ -112,15 +109,15 @@ export class DeepseekApi implements ChatApi {
                 })
                 return
             }
-            const systemMessages=generateSystemMessage() as ChatMessage[]
-            const messages = [...systemMessages,...config.session?.messages.slice(-historyMessageCount) as [], {...userMessage}] as ChatMessage[]
+            const systemMessages = generateSystemMessage() as ChatMessage[]
+            const messages = [...systemMessages, ...config.session?.messages.slice(-historyMessageCount) as [], {...userMessage}] as ChatMessage[]
             const messageForRequest = messages.map(msg => {
                 return {
                     role: msg.role,
                     content: msg.contents.filter(it => it.trim() !== "").join("\n") || " " // 确保内容不为空,
                 }
             })
-            
+
             //console.log(messageForRequest)
             //send request to deepseek api
             const response = await fetch(apiInformation.url, {

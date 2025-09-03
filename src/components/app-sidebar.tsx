@@ -39,10 +39,10 @@ export function AppSidebar() {
                         <span className={"grow text-center text-xl"}>{language["sidebar.navigator.settings"]}</span>
                     </Button>
                     <Button variant={pathname === "/chat/presets" ? undefined : "ghost"}
-                            onClick={() => {
-                                router.push("/chat/presets");
-                            }}
-                            className={cn(" w-full h-12 flex flex-row items-center ")}>
+                             onClick={() => {
+                                 router.push("/chat/presets");
+                             }}
+                             className={cn(" w-full h-12 flex flex-row items-center ")}>
                         <SaveIcon className={"size-8"}/>
                         <span className={"grow text-center text-xl"}>{language["sidebar.navigator.presets"]}</span>
                     </Button>

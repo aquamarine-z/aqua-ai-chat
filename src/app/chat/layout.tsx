@@ -15,7 +15,6 @@ export default function ChatPageLayout({
                     <AppSidebar/>
                     {children}
                 </SidebarProvider>
-
             </div>
         </>
 
