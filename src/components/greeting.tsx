@@ -2,16 +2,18 @@ import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {useInputStore} from "@/store/input-store";
 import {defaultUserMessage} from "@/schema/chat-message";
+import {useLanguageStore} from "@/store/language-store";
 
 export const Greeting = () => {
+    const language=useLanguageStore().language
     return <div className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center select-none")}>
         <div className={"w-full flex items-center justify-center"}>
             <div className={"flex flex-col items-center px-6 max-w-5xl w-full gap-4"}>
-                <h1 className={"text-5xl font-extrabold text-foreground opacity-80"}>欢迎使用Aqua AI Chat</h1>
-                <p className={"text-2xl text-bold text-foreground opacity-70"}>请问需要我做些什么?</p>
+                <h1 className={"text-5xl font-extrabold text-foreground opacity-80"}>{language['greeting.title']}</h1>
+                <p className={"text-2xl text-bold text-foreground opacity-70"}>{language['greeting.subtitle']}</p>
 
                 <div className={"w-full flex flex-row items-center justify-center gap-2 overflow-x-auto py-2"}>
-                    <p className={"text-1xl text-bold text-foreground opacity-60 "}>猜你想问:</p>
+                    <p className={"text-1xl text-bold text-foreground opacity-60 "}>{language['greeting.suggestion']}</p>
                     {
                         greetingSuggestions.map((item, index) => {
                             return <GreetingSuggestionButton key={index} title={item.title} content={item.content}/>

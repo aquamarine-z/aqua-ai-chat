@@ -110,4 +110,8 @@ export const zh_cn = {
     "dialog.delete-all-storage.button.cancel": "取消",
     "dialog.delete-all-storage.success": "缓存清除成功",
     "dialog.delete-all-storage.fail": "缓存清除失败，请检查相关权限",
+
+    "greeting.title": "欢迎使用 Aqua AI Chat",
+    "greeting.subtitle": "请问有什么我可以帮助您的吗？",
+    "greeting.suggestion":"猜你想问"
 }
