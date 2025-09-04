@@ -7,6 +7,7 @@ import {ChatMessage} from "@/schema/chat-message";
 import {useLanguageStore} from "@/store/language-store";
 import {useLanguageSettingsStore} from "@/store/language-settings-store";
 import {DeepseekApiAgent} from "@/api/deepseek-api-agent";
+import {CarAssistantApi} from "@/api/car-assistant-api";
 
 export class ChatConfig{
     session: ChatSession | undefined
@@ -24,6 +25,8 @@ export function getApiByModelName(model:ModelConfig){
     if(model.name.startsWith("Deepseek")){
         return new DeepseekApiAgent()
     }else if(model.name.startsWith("Car Assistant")) {
+        return new CarAssistantApi()
+    }else if (model.name.startsWith("Test Model")) {
         return new FakeServerApi()
     }
 }

@@ -12,6 +12,8 @@ export const models = [
     },
     {
         name:"Car Assistant"
+    },{
+        name:"Test Model"
     }
 ]
 export const ModelConfigSchema = z.object({
