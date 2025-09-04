@@ -29,5 +29,5 @@ export const defaultGreetingMessage: ChatMessage = {
             description: "做一个简短的自我介绍",
             message: "请简短地介绍一下你自己",
         }]
-    }
+    },
 }

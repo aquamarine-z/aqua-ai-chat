@@ -8,6 +8,7 @@ import styles from "./chat-list.module.css"
 import {cn} from "@/lib/utils";
 import {useChatListStateStore} from "@/store/chat-list-state-store";
 import dynamic from "next/dynamic";
+import {Greeting} from "@/components/greeting";
 
 const Virtuoso = dynamic(async () => {
     const mod = await import("react-virtuoso");
@@ -35,8 +36,10 @@ export function ChatList() {
             }
         })
     }, [chatStore]);
-
-    return <Virtuoso followOutput={true}
+    if(messages.length===0){
+        return <Greeting/>
+    }
+    else return <Virtuoso followOutput={true}
                      className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center ", styles["chat-list-scroll"])}
                      data={messages}
                      overscan={250}

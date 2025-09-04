@@ -56,6 +56,7 @@ export const ChatFragment = memo(
 
                             </Suggestion>
                         }
+
                         {
                             props.message.metaType !== "greeting" && <div
                                 className={cn("w-full flex gap-1", props.message.role === "user" ? "flex-row-reverse" : "flex-row")}>
