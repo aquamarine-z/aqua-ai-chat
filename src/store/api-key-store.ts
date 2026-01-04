@@ -4,6 +4,8 @@ import {persist} from 'zustand/middleware';
 type ApiKeyData = {
     url: string;
     key: string;
+    name: string;
+    type: "OpenAi" | "Other";
 };
 
 type ApiKeyStore = {
@@ -19,6 +21,8 @@ const initialState = {
         "Deepseek R1": {
             url: "https://api.deepseek.com/v1/chat/completions",
             key: "",
+            name: "Deepseek R1",
+            type: "openAi" as "OpenAi",
         },
     },
 }
