@@ -3,6 +3,7 @@ import React from "react";
 import {ChatSession} from "@/schema/chat-session";
 import {ChatMessage} from "@/schema/chat-message";
 import {Thinking} from "@/schema/chat-message-metadata/thinking";
+import {ModelConfig} from "@/schema/model-config";
 
 const responseMessageContent = `
 ## 表格示例
@@ -29,7 +30,7 @@ const responseThinkingContent = `你好 这是测试思考数据1111111111111111
 const deltaTime = 10 // 每个字的间隔时间，单位毫秒
 
 export class FakeServerApi implements ChatApi {
-    query(message:ChatMessage[]):Promise<string>{
+    query(modelConfig: ModelConfig,message:ChatMessage[]):Promise<string>{
         console.log(message)
         return new Promise<string>((resolve, reject)=>{
             resolve("null")

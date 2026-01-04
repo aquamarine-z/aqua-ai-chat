@@ -6,7 +6,7 @@ import {FakeServerApi} from "@/api/fake-server-api";
 import {ChatMessage} from "@/schema/chat-message";
 import {useLanguageStore} from "@/store/language-store";
 import {useLanguageSettingsStore} from "@/store/language-settings-store";
-import {DeepseekApiAgent} from "@/api/deepseek-api-agent";
+
 
 export class ChatConfig{
     session: ChatSession | undefined
@@ -17,7 +17,7 @@ export class ChatConfig{
 }
 export interface ChatApi {
     sendMessage:(config:ChatConfig,updater:(action:SetStateAction<ChatSession>)=>void)=>void,
-    query:(messages:ChatMessage[])=>Promise<string>,
+    query:(modelConfig: ModelConfig,messages:ChatMessage[])=>Promise<string>,
     stop:()=>void,
 }
 export function getApiByModelName(model:ModelConfig){

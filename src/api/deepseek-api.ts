@@ -6,11 +6,12 @@ import {ChatMessage} from "@/schema/chat-message";
 import {Thinking} from "@/schema/chat-message-metadata/thinking";
 import {z} from "zod";
 import {useApiKeyStore} from "@/store/api-key-store";
+import {ModelConfig} from "@/schema/model-config";
 
 const historyMessageCount = 4;
 
 export class DeepseekApi implements ChatApi {
-    async query(messages: ChatMessage[]): Promise<string> {
+    async query(modelConfig: ModelConfig,messages: ChatMessage[]): Promise<string> {
         const apiInformation = useApiKeyStore.getState().getKey("Deepseek R1") || {
             url: "",
             key: "",

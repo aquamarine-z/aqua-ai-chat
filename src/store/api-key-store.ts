@@ -1,12 +1,8 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
+import {ApiKeyData} from "@/schema/api-key-data";
 
-type ApiKeyData = {
-    url: string;
-    key: string;
-    name: string;
-    type: "OpenAi" | "Other";
-};
+
 
 type ApiKeyStore = {
     keys: Record<string, ApiKeyData>;
@@ -22,8 +18,14 @@ const initialState = {
             url: "https://api.deepseek.com/v1/chat/completions",
             key: "",
             name: "Deepseek R1",
-            type: "openAi" as "OpenAi",
+            type: "OpenAi" as "OpenAi",
         },
+        "Car Assistant": {
+            url: "",
+            key: "",
+            name: "Car Assistant",
+            type: "Fake" as "Fake",
+        }
     },
 }
 export const useApiKeyStore = create<ApiKeyStore>()(

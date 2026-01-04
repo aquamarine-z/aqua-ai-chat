@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {ChatMessageContentSchema, defaultGreetingMessage} from "@/schema/chat-message";
+import {ChatMessageContentSchema} from "@/schema/chat-message";
 import {defaultModelConfig, ModelConfigSchema} from "@/schema/model-config";
 import {defaultInputStorage, InputStorageSchema} from "@/schema/input-storage";
 

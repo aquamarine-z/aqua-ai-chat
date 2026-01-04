@@ -4,8 +4,9 @@ import {useEffect, useState} from "react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {ChevronUp} from "lucide-react";
-import {models} from "@/schema/model-config";
+
 import {useChatStore} from "@/store/chat-store";
+import {useApiKeyStore} from "@/store/api-key-store";
 
 export function ModelSelector() {
     const [open, setOpen] = useState(false)
@@ -14,7 +15,14 @@ export function ModelSelector() {
     useEffect(() => {
         setModelName(chatStore.getCurrentSession().modelConfig.name)
     }, [chatStore.currentSessionIndex]);
-    
+    //map record to array
+    const modelKeys = useApiKeyStore().keys
+    const models=Object.keys(modelKeys).map(it=>{
+        return {
+            name:it,
+            apiKeyData:modelKeys["it"]
+        }
+    })
     return <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild >
             <Button variant={"ghost"}
@@ -27,7 +35,9 @@ export function ModelSelector() {
         </DropdownMenuTrigger>
         <DropdownMenuContent side={"bottom"} className={"w-56 h-32"}>
             <div className={"w-full h-full overflow-y-auto"}>
-                {models.map((it, index) => {
+                {
+
+                    models.map((it, index) => {
                     return <Button className={"w-full"} variant={"ghost"} key={index}
                                    onClick={() => {
                                        chatStore.updateCurrentSession(session => {

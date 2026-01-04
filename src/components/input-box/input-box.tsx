@@ -14,6 +14,7 @@ import {ChatMessage, defaultUserMessage} from "@/schema/chat-message";
 import {ChatApi, ChatConfig, getApiByModelName} from "@/api";
 import useSettingsStore from "@/store/settings-store";
 import {ChatSession} from "@/schema/chat-session";
+import {ModelConfig} from "@/schema/model-config";
 
 
 export const InputBox = () => {
@@ -90,7 +91,7 @@ export const InputBox = () => {
                     })
                 }
 
-                const modelName = currentSession.modelConfig;
+                const modelName = currentSession.modelConfig as unknown as ModelConfig;
                 const chatApi = getApiByModelName(modelName)
                 if (!chatApi) return;
                 const config: ChatConfig = {
@@ -119,7 +120,8 @@ export const InputBox = () => {
                             }, userMessage
                         ] as ChatMessage[]
                         //console.log(messages)
-                        chatApi.query(messages.map(it => {
+                        const modelConfig = chatStore.getCurrentSession().modelConfig as unknown as ModelConfig
+                        chatApi.query(modelConfig, messages.map(it => {
                             return {
                                 role: it.role,
                                 contents: it.contents
