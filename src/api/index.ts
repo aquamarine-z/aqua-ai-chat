@@ -22,7 +22,7 @@ export interface ChatApi {
 }
 export function getApiByModelName(model:ModelConfig){
     if(model.name.startsWith("Deepseek")){
-        return new DeepseekApiAgent()
+        return new DeepseekApi()
     }else if(model.name.startsWith("Car Assistant")) {
         return new FakeServerApi()
     }
