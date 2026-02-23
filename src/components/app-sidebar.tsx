@@ -24,7 +24,7 @@ export function AppSidebar() {
         <Sidebar className={"w-64"}>
             <SidebarHeader className={"flex flex-col items-center justify-start"}>
                 <Image src={logoBlack} alt="logo" className={"w-32 h-32 dark:invert"}/>
-                <h1 className={"font-extrabold"}>Aqua AI Chat</h1>
+                <h1 className={"font-extrabold"}>汽车推荐助手</h1>
             </SidebarHeader>
             <SidebarContent className={"w-full grow flex flex-col items-center justify-start"}>
                 <SidebarGroup className={"w-full h-fit px-4 "}>

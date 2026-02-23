@@ -4,7 +4,7 @@ export const zh_cn = {
     "copy.success": "已成功复制到剪贴板",
     "copy.fail": "复制到剪贴板失败，请检查相关权限",
 
-    "page-header.title": "Aqua AI Chat",
+    "page-header.title": "车辆推荐AI助手",
 
     "input-box.input.placeholder": "请输入你的问题 (Enter 发送，Shift+Enter 换行)",
     "input-box.attachment.title": "附件上传",

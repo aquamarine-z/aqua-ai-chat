@@ -26,7 +26,7 @@ export function PageHeader() {
                             }
                         })
                     }}>
-                <Image src={logoBlack} alt={""} className={"w-6 h-6 dark:invert"}/>
+               
                 <p className={"text-sm flex items-center justify-center"}>{language["page-header.title"]}</p>
             </Button>
             <div className={"grow"}/>

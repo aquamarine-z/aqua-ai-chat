@@ -7,7 +7,7 @@ export const Greeting = () => {
     return <div className={cn("w-full h-full py-2 grow overflow-y-auto flex items-center select-none")}>
         <div className={"w-full flex items-center justify-center"}>
             <div className={"flex flex-col items-center px-6 max-w-5xl w-full gap-4"}>
-                <h1 className={"text-5xl font-extrabold text-foreground opacity-80"}>欢迎使用Aqua AI Chat</h1>
+                <h1 className={"text-5xl font-extrabold text-foreground opacity-80"}>欢迎使用汽车推荐助手</h1>
                 <p className={"text-2xl text-bold text-foreground opacity-70"}>请问需要我做些什么?</p>
 
                 <div className={"w-full flex flex-row items-center justify-center gap-2 overflow-x-auto py-2"}>
@@ -40,15 +40,15 @@ export const GreetingSuggestionButton = (props: {
 }
 export const greetingSuggestions = [
     {
-        title: "提供建议",
+        title: "查询车辆数据",
         content: "你能给我一些提高工作效率的建议吗？"
     },
     {
-        title: "翻译文本",
+        title: "搜索市场价格",
         content: "请把这段话翻译成法语：'你好，今天过得怎么样？'"
     },
     {
-        title: "生成代码",
+        title: "分析顾客评价",
         content: "帮我写一段Python代码，实现一个简单的计算器功能。"
     }
 ]
